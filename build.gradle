@@ -1,0 +1,61 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'io.insight'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+subprojects {
+	apply plugin: "java"
+	apply plugin: "maven-publish"
+	apply plugin: "org.springframework.boot"
+	apply plugin: "io.spring.dependency-management"
+
+	sourceCompatibility = '21'
+	group = 'io.insight'
+	version = '0.0.1-SNAPSHOT'
+
+	repositories {
+		mavenCentral()
+	}
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
+
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter'
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+		compileOnly 'org.projectlombok:lombok:1.18.36'
+		annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+		implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+		implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+		implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+	}
+
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
+}
+
+bootJar{
+	enabled(true)
+}
+jar{
+	enabled(false)
+}

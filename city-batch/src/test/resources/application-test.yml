@@ -1,0 +1,73 @@
+server:
+  port: 8081
+spring:
+  batch:
+    jdbc:
+      initialize-schema: never
+    job:
+      enabled: false  # 자동 실행 방지
+  datasource:
+    url: jdbc:mysql://localhost:3306/district?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: admin
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+      idle-timeout: 10000
+      connection-timeout: 10000
+      validation-timeout: 1000
+      max-lifetime: 1795000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        storage_engine: innodb
+        show_sql: true
+        format_sql: true
+    show-sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username : admin
+    password: secret
+
+rabbitmq:
+  population:
+    exchange-name: real-exchange
+    queue-name: pop-queue
+    routing-key: pop-key
+    durable: true
+    exclusive: false
+    autoDelete: false
+    dead-letter:
+      durable: true
+      exchange-name: dead-exchange
+      queue-name: dead-queue
+      routing-key: dead-key
+  city:
+    exchange-name: real-exchange
+    queue-name: city-queue
+    routing-key: city-key
+    durable: true
+    exclusive: false
+    autoDelete: false
+    dead-letter:
+      durable: true
+      exchange-name: dead-exchange
+      queue-name: dead-queue
+      routing-key: dead-key
+  ranking:
+    exchange-name: real-exchange
+    queue-name: rank-queue
+    routing-key: rank-key
+    durable: true
+    exclusive: false
+    autoDelete: false
+    dead-letter:
+      durable: true
+      exchange-name: dead-exchange
+      queue-name: dead-queue
+      routing-key: dead-key
+

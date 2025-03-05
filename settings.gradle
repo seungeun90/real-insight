@@ -1,0 +1,6 @@
+rootProject.name = 'real-insight'
+include 'user-api'
+include 'city-batch'
+include 'apt-batch'
+include 'excel-data'
+
