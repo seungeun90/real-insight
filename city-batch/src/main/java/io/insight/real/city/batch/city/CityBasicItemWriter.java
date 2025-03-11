@@ -33,8 +33,8 @@ public class CityBasicItemWriter implements ItemWriter<List<CityBasicInfoRequest
 
     @BeforeStep
     public void beforeStep(StepExecution stepExecution) {
-        this.stepExecution = stepExecution;  // ✅ StepExecution 주입
-        log.info("📌 Step 시작: {}, 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
+        this.stepExecution = stepExecution;  // StepExecution 주입
+        log.info("Step 시작: {}, 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CityBasicItemWriter implements ItemWriter<List<CityBasicInfoRequest
                 .collect(Collectors.toList());
 
         cityWebClientService.fetchCityBasicInfos(items)
-                .buffer(100) // ✅ 100개씩 모아서 저장 (batch 처리)
+                .buffer(100) //  100개씩 모아서 저장 (batch 처리)
                 .flatMap(cityDataList -> {
                     List<CityBasicInfo> basicInfos = new ArrayList<>();
 
@@ -94,7 +94,7 @@ public class CityBasicItemWriter implements ItemWriter<List<CityBasicInfoRequest
     }
     @AfterStep
     public ExitStatus afterStep(StepExecution stepExecution) {
-        log.info("✅ Step 완료: {}, 최종 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
+        log.info("Step 완료: {}, 최종 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
         return stepExecution.getExitStatus();
     }
 }

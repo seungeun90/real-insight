@@ -32,19 +32,9 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
      * */
     @Override
     public CityBasicData findCityData(String provinceCode, String cityCode, String year) {
-        Query common = new Query();
-        if (provinceCode != null) {
-            common.addCriteria(Criteria.where("provinceCode").is(provinceCode));
-        }
-        if (cityCode != null) {
-            common.addCriteria(Criteria.where("cityCode").is(cityCode));
-        }
-        if (year != null) {
-            common.addCriteria(Criteria.where("year").is(year));
-        }
 
-        CityBasicInfo cityData = getCityData(common);
-        CityRankingData cityRankingData = getCityRankingData(common);
+        CityBasicInfo cityData = getCityData(provinceCode+cityCode,year);
+        CityRankingData cityRankingData = getCityRankingData(provinceCode, cityCode, year);
 
         CityRankingData workRank = cityRankingRepository.findByProvinceCodeAndCityCodeAndYear(provinceCode, cityCode, "2022");
         if(workRank != null) {
@@ -65,7 +55,10 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
      * 지역 기초 정보
      * 인구 수, 가구 수, 인구 밀도, 노령화지수, 평균 연령 정보
      * */
-    private CityBasicInfo getCityData(Query query) {
+    private CityBasicInfo getCityData(String admCd, String year) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("admCd").is(admCd));
+        query.addCriteria(Criteria.where("year").is(year));
         query.fields().exclude("employCnt").exclude("corpCnt");
         return mongoTemplate.findOne(query, CityBasicInfo.class, "city_basic");
     }
@@ -73,7 +66,18 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
     /**
      * 시/도 내 모든 군/구 인구 수 정보
      * */
-    private CityRankingData getCityRankingData(Query query) {
+    private CityRankingData getCityRankingData(String provinceCode, String cityCode, String year) {
+        Query query = new Query();
+        if (provinceCode != null) {
+            query.addCriteria(Criteria.where("provinceCode").is(provinceCode));
+        }
+        if (cityCode != null) {
+            query.addCriteria(Criteria.where("cityCode").is(cityCode));
+        }
+        if (year != null) {
+            query.addCriteria(Criteria.where("year").is(year));
+        }
+
         return mongoTemplate.findOne(query, CityRankingData.class, "city_ranking");
     }
 

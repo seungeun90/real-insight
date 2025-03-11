@@ -3,6 +3,7 @@ package io.insight.real.city.service;
 import io.insight.real.city.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Publisher;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ import java.util.function.Function;
 public class CommonWebClientService {
     private final WebClient webClient;
 
-    public Flux executeRequest(String url, BodyInserter bodyInserter, Function function) {
+    public <T,R> Flux<R> executeRequest(String url, BodyInserter bodyInserter,
+                                        Function<? super ApiResponse, ? extends Publisher<? extends R>> function) {
         return webClient
                 .method(HttpMethod.GET)
                 .uri(url)

@@ -1,0 +1,58 @@
+server:
+  port: 8086
+spring:
+  batch:
+    jdbc:
+      initialize-schema: never
+    job:
+      enabled: false  # 자동 실행 방지
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+  r2dbc:
+    properties:
+      reconnect: true
+    url: r2dbc:mariadb://localhost:3306/apt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: admin
+    password: admin
+    pool:
+      initial-size: 10
+      max-size: 30
+      max-idle-time: 60000  # 60초 (기본값: 30초, 필요시 120초 이상으로 조정)
+      max-life-time: 300000 # 300초 (5분)
+      validation-query: "SELECT 1"
+  datasource:
+    service:
+      jdbc-url: jdbc:mysql://localhost:3306/apt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      username: admin
+      password: admin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 5
+        idle-timeout: 10000
+        connection-timeout: 10000
+        validation-timeout: 1000
+        max-lifetime: 1795000
+    batch:
+      jdbc-url: jdbc:mysql://localhost:3306/apt_batch?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      username: admin
+      password: admin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 5
+        idle-timeout: 10000
+        connection-timeout: 10000
+        validation-timeout: 1000
+        max-lifetime: 1795000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        storage_engine: innodb
+        show_sql: true
+        format_sql: true
+    show-sql: true
