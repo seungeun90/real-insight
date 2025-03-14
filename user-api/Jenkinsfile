@@ -118,7 +118,7 @@ pipeline {
                         sshCommand remote: remote, command: "docker pull ${imageTag}"
 
                         echo "Starting new container"
-                        sshCommand remote: remote, command: "docker run -d --rm --name ${MODULE} -e SPRING_PROFILES_ACTIVE=${DEPLOY_STAGE} -p ${modulePort}:${modulePort} ${imageTag}"
+                        sshCommand remote: remote, command: "docker run -d --rm --name ${MODULE} -p ${modulePort}:${modulePort} ${imageTag}"
                     }
                 }
             }
