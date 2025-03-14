@@ -1,9 +1,9 @@
 let realEstateData;
-
+let addr = 'http://15.164.133.223';
 function loadAptHistory() {
     let regionCode = findRegionCode();
     if(regionCode==null) return;
-    let url = 'http://localhost:8086/apt/trade/region/' + regionCode +"?size="+"84";
+    let url = addr + ':8086/apt/trade/region/' + regionCode +"?size="+"84";
     fetchData(url, data => {
         realEstateData = data;
         drawAptHistoryTable();

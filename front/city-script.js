@@ -7,7 +7,7 @@ let cityPopChart;
 let locationData ;
 let aptLocationCode;
 const years  = [2023,2022];
-
+let addr = 'http://15.164.133.223';
 const provinceSelect = document.getElementById("province");
 const citySelect = document.getElementById("city");
 const townSelect = document.getElementById("town");
@@ -52,7 +52,7 @@ function showTab(tabId) {
 
 //Province(광역시) 목록 로드
 function loadProvinces() {
-    let url = 'http://localhost:8082/districts';
+    let url = addr + ':8082/districts';
     fetchData(url, data => {
         locationData = data;
         provinceSelect.innerHTML = `<option value="">시/도 선택</option>`;
@@ -66,7 +66,7 @@ function loadProvinces() {
 }
 
 function loadProvincesForApt() {
-    let url = 'http://localhost:8086/regions';
+    let url =  addr + ':8086/regions';
     fetchData(url, data => {
         aptLocationCode = data;
     });
@@ -151,7 +151,7 @@ function loadData() {
 
 
 function fetchCityPopulation(provinceCode,cityCode){
-    let url = `http://localhost:8082/city/pop/province/${provinceCode}/city/${cityCode}`;
+    let url =  addr + `:8082/city/pop/province/${provinceCode}/city/${cityCode}`;
     fetchData(url,data => {
         popRankingData = data.popRankingData;
         cityPopulation = data.cityPopulation;
@@ -189,7 +189,7 @@ function renderWorkDataTable(data) {
 }
 
 function fetchCityData(provinceCode,cityCode,year){
-    let url = `http://localhost:8082/city?provinceCode=${provinceCode}&cityCode=${cityCode}&year=${year}`;
+    let url =  addr + `:8082/city?provinceCode=${provinceCode}&cityCode=${cityCode}&year=${year}`;
     fetchData(url,data =>{
         updateNumberDisplay("population", data.cityBasicInfo.totalPopulation);
         updateNumberDisplay("households", data.cityBasicInfo.householdCount);
@@ -209,19 +209,19 @@ function fetchCityData(provinceCode,cityCode,year){
 }
 
 function fetchWorkData(provinceCode,cityCode,year){
-    let cityUrl = `http://localhost:8082/work/province/${provinceCode}/city/${cityCode}`;
+    let cityUrl =  addr + `:8082/work/province/${provinceCode}/city/${cityCode}`;
     fetchData(cityUrl, data => {
         renderWorkDataTable(data);
     });
 
-    let url = `http://localhost:8082/work/province/${provinceCode}`;
+    let url = addr + `:8082/work/province/${provinceCode}`;
     fetchData(url, data=>{
         createWorkChart(data);
     })
 }
 
 function fetchPopInProvince(provinceCode,year){
-    let url = `http://localhost:8082/cities/pop?provinceCode=${provinceCode}&year=${year}`;
+    let url = addr + `:8082/cities/pop?provinceCode=${provinceCode}&year=${year}`;
     fetchData(url, data =>{
         createPopChart(data);
     });
