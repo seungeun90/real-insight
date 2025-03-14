@@ -8,6 +8,8 @@ pipeline {
         BRANCH = 'develop'
         DEPLOY_STAGE = 'dev'
         ROOT_PROJECT ='real-insight'
+        CITY_CONSUMER_KEY = credentials('CITY_CONSUMER_KEY')
+        CITY_CONSUMER_SECRET = credentials('CITY_CONSUMER_SECRET')
     }
     parameters {
         choice choices: ['develop', 'stage', 'main'], name: 'GIT_REF_MANUAL'

@@ -8,6 +8,7 @@ pipeline {
         BRANCH = 'develop'
         DEPLOY_STAGE = 'dev'
         ROOT_PROJECT ='real-insight'
+        APT_API_SECRET = credentials('APT_API_SECRET')
     }
     parameters {
         choice choices: ['develop', 'stage', 'main'], name: 'GIT_REF_MANUAL'
@@ -118,12 +119,14 @@ pipeline {
                         sshCommand remote: remote, command: "docker pull ${imageTag}"
 
                         echo "Starting new container"
-                        sshCommand remote: remote, command: """
-                                                    docker run -d --rm --name ${MODULE} \
-                                                    -e APT_API_SECRET="${APT_API_SECRET}" \
-                                                    -e SPRING_PROFILES_ACTIVE=${DEPLOY_STAGE} \
-                                                    -p ${modulePort}:${modulePort} ${imageTag}
-                                                    """
+                        def dockerCommand = """
+                             docker run -d --rm --name ${MODULE} \
+                             --env=SPRING_PROFILES_ACTIVE="${env.DEPLOY_STAGE}" \
+                             --env=APT_API_SECRET="${env.APT_API_SECRET}" \
+                             -p ${modulePort}:${modulePort} ${imageTag}
+                        """
+
+                        sshCommand remote: remote, command: dockerCommand
                     }
                 }
             }
