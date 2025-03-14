@@ -4,7 +4,7 @@ pipeline {
         gradle 'gradle'
     }
     environment {
-        MODULE = "front-web"
+        MODULE = "front"
         BRANCH = 'develop'
         DEPLOY_STAGE = 'dev'
         ROOT_PROJECT ='real-insight'
@@ -51,7 +51,7 @@ pipeline {
                    git remote add origin ${GIT_REPO}
                    git fetch --depth=1 origin ${BRANCH}
                    git sparse-checkout init --cone
-                   git sparse-checkout set apt-batch
+                   git sparse-checkout set ${MODULE}
                    git checkout ${BRANCH}
                    '''
                 }
@@ -68,7 +68,7 @@ pipeline {
                         def fullImageTag = "${imageTag}:${MODULE}-${BUILD_NUMBER}"
                         def latestTag = "${imageTag}:${MODULE}-latest"
                         docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com", "ecr:${AWS_REGION}:AWS_ECR_KEY") {
-                            def appImage = docker.build(fullImageTag, "./${MODULE}")
+                            def appImage = docker.build(fullImageTag, "./front-web")
                             appImage.push()
                             sh "docker tag ${fullImageTag} ${latestTag}"
                             sh "docker push ${latestTag}"
