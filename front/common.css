@@ -1,0 +1,140 @@
+/* 🌙 눈이 편한 배경색 */
+body {
+    background-color: #f4f6f9; /* 기존보다 부드러운 회색 */
+    padding-bottom: 80px;
+}
+
+/* 컨테이너 기본 스타일 */
+.container {
+    max-width: 1200px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 숨김 클래스 */
+.hidden {
+    display: none;
+}
+
+/* 탭 컨텐츠 크기 조정 */
+.tab-content {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 정보 박스 (탭 안의 컨텐츠) */
+.info-box {
+    width: 100%;
+    max-width: 1100px;
+    overflow: hidden;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 테이블을 감싸는 컨테이너 */
+.table-container {
+    width: 100%;
+    max-width: 1100px;
+    overflow-x: auto;
+    background: #f5f7fa;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    min-width: 1000px;
+    table-layout: auto;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 모든 테이블의 thead 스타일 통일 */
+table thead {
+    background: #2b3e50 !important; /* 어두운 네이비톤 */
+    color: white !important;
+}
+
+table thead th {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #2b3e50 !important; /* 헤더 배경 강제 적용 */
+    color: white !important; /* 글씨색 강제 적용 */
+}
+
+/* 테이블 헤더 및 셀 스타일 */
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* 정렬 아이콘 */
+.sort-icon {
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+/* 탭 스타일 */
+.nav-tabs .nav-link {
+    cursor: pointer;
+}
+
+/* 폼 요소 스타일 */
+.form-select {
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+/* 버튼 스타일 */
+.btn-custom {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+}
+
+/* 제목 스타일 */
+h4 {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* 반응형 대응 */
+@media (max-width: 1024px) {
+    .tab-content {
+        max-width: 100%;
+    }
+    .info-box {
+        max-width: 100%;
+    }
+    .table-container {
+        overflow-x: auto;
+    }
+}

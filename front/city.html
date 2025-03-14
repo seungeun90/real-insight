@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인구 및 경제 데이터</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script defer src="city-script.js"></script>
+    <script defer src="apt-script.js"></script>
+    <script defer src="common.js"></script>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="text-center">인구 및 경제 데이터</h2>
+        <div class="row mb-4 g-3">
+            <div class="col-md-4">
+                <select id="province" class="form-select">
+                    <option value="">시/도 선택</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select id="city" class="form-select">
+                    <option value="">군/구 선택</option>
+                </select>
+            </div>
+            <div class="col-md-4" style="display: none;">
+                <select id="town" class="form-select">
+                    <option value="">법정동 선택</option>
+                </select>
+            </div>
+            <!-- <div class="col-md-3">
+                <select id="year" class="form-select">
+                    <option value="">년도 선택</option>
+                </select>
+            </div> -->
+            <div class="col-md-1 d-flex align-items-end">
+                <button class="btn btn-custom w-100" onclick="loadData()">조회</button>
+            </div>
+        </div>
+        
+        
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-tab="populationTab" data-tab-group="main" onclick="showTab('populationTab')">지역 정보</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="realEstateTab" data-tab-group="main" onclick="showTab('realEstateTab')">아파트 실거래가</a>
+            </li>
+        </ul>
+
+        <div id="populationTab" class="tab-content" data-tab-group="main">
+            <div class="info-box">
+                <div class="info-box">
+                    <h4>인구 정보</h4>
+                    <div class="data-item">
+                        <span>총 인구 수: <strong id="population">-</strong></span>
+                        <small>(서울 내 <span id="populationRank">-</span>위)</small>
+                    </div>
+                    <div class="data-item">
+                        <span>인구밀도: <strong id="popDensity">-</strong></span>
+                        <small>(서울 내 <span id="popDensityRank">-</span>위)</small>
+                    </div>
+                    <div class="data-item">
+                        <span>평균 연령대: <strong id="averageAge">-</strong></span>
+                    </div>
+                    <div class="data-item">
+                        <span>노령화 지수: <strong id="agingIndex">-</strong></span>
+                        <small>(서울 내 <span id="agingRank">-</span>위)</small>
+                    </div>
+                    <div class="data-item">
+                        <span>총 가구 수: <strong id="households">-</strong></span>
+                        <span>평균 가구 수: <strong id="avgHouseholds">-</strong></span>
+                        <small>(서울 내 <span id="householdRank">-</span>위)</small>
+                    </div>
+
+                    <canvas id="populationChart"></canvas>
+                   
+                    <!-- <canvas id="householdChart"></canvas>   -->
+                    <br/><br/>
+                    <h4>연령 비율 정보</h4>
+                    <canvas id="ageRatioChart"></canvas>
+              
+                    <ul class="nav nav-tabs mt-4">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-tab="top5table" data-tab-group="sub" onclick="showTab('top5table')">연령대별 Top 5</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="rankingTable" data-tab-group="sub" onclick="showTab('rankingTable')">전체 동 순위</a>
+                        </li>
+                    </ul>
+                    <div id="top5table" class="tab-content hidden" data-tab-group="sub" >
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>연령대</th>
+                                    <th>1위</th>
+                                    <th>2위</th>
+                                    <th>3위</th>
+                                    <th>4위</th>
+                                    <th>5위</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top5tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="rankingTable" class="tab-content" data-tab-group="sub">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>동</th>
+                                    <th>0-10세</th>
+                                    <th>10대</th>
+                                    <th>20대</th>
+                                    <th>30대</th>
+                                    <th>40대</th>
+                                    <th>50대</th>
+                                    <th>60대</th>
+                                    <th>70세 이상</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rankingTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <br/><br/>
+                    <h4>직장 정보</h4>
+                    <div class="data-item">
+                        <span>직장 수: <strong id="workplaces">-</strong></span>
+                        <small>(서울 내 <span id="workplaceRank">-</span>위)</small>
+                    </div>
+                    <div class="data-item">
+                        <span>종사자 수: <strong id="employees">-</strong></span>
+                        <small>(서울 내 <span id="employeeRank">-</span>위)</small>
+                    </div>
+                    <canvas id="employmentChart"></canvas>
+            
+                    <div class="info-box">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>동</th>
+                                    <th>종사자 수</th>
+                                    <th>직장 수</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workDataTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- 아파트 실거래가 탭 -->
+      
+        <div id="realEstateTab" class="tab-content hidden" data-tab-group="main">
+            <div class="info-box">
+                <h4>아파트 실거래가</h4>
+                <p>실거래가 데이터를 확인할 수 있습니다.</p>
+        
+                <!-- 오른쪽 텍스트 -->
+                <div style="float: right; text-align: right; color: #6c757d; font-size: 14px;">
+
+                    <span>전용 84평형 기준</span><br>
+                    <span>금액 기준(만원)</span>
+                </div>
+        
+                <!-- 테이블 컨테이너 -->
+                <div class="table-container">
+                    <div class="table-container">
+                        <table id="realEstateTable">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable(0)">동명 <span class="sort-icon">▲</span></th>
+                                    <th>아파트명</th>
+                                    <th onclick="sortTable(2)">연식 <span class="sort-icon">▲</span></th>
+                                    <th onclick="sortTable(3)">전고점 <span class="sort-icon">▲</span></th>
+                                    <th>전용면적</th>
+                                    <th>층</th>
+                                    <th>거래날짜</th>
+                                    <th onclick="sortTable(6)">전저점 <span class="sort-icon">▲</span></th>
+                                    <th>전용면적</th>
+                                    <th>층</th>
+                                    <th>거래날짜</th>
+                                    <th onclick="sortTable(9)">수익률 <span class="sort-icon">▲</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 데이터가 동적으로 추가됨 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+</body>
+</html>
