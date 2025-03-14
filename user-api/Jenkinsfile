@@ -1,0 +1,129 @@
+pipeline {
+    agent any
+    tools {
+        gradle 'gradle'
+    }
+    environment {
+        MODULE = "user-api"
+        BRANCH = 'develop'
+        DEPLOY_STAGE = 'dev'
+        ROOT_PROJECT ='real-insight'
+    }
+    parameters {
+        choice choices: ['develop', 'stage', 'main'], name: 'GIT_REF_MANUAL'
+    }
+    stages {
+        stage('Initialize BRANCH & DEPLOY_STAGE') {
+            steps {
+               script {
+                    // GIT_REF 값을 기반으로 DEPLOY_STAGE 설정
+                    def gitRefMap = [
+                        'develop': 'dev',
+                        'stage'  : 'stage',
+                        'main'   : 'production'
+                    ]
+                    try {
+                        def refs = "$GIT_REF".split('/')
+                        BRANCH = refs[refs.size()-1]
+                        DEPLOY_STAGE = gitRefMap.get(BRANCH, null)
+
+                    } catch(Exception e) {
+                        BRANCH = params.GIT_REF_MANUAL
+                        DEPLOY_STAGE = gitRefMap.get(params.GIT_REF_MANUAL, null)
+                    }
+
+                    if(!DEPLOY_STAGE) {
+                        error "Invalid GIT_REF: ${GIT_REF}"
+                    }
+
+                    echo "DEPLOY_STAGE initialized: ${DEPLOY_STAGE}"
+                }
+            }
+        }
+        stage('Checkout Code') {
+            steps {
+                script {
+                   sh '''
+                   rm -rf ${MODULE}
+                   rm -rf .git || true
+                   git init
+                   git remote remove origin || true
+                   git remote add origin ${GIT_REPO}
+                   git fetch --depth=1 origin ${BRANCH}
+                   git sparse-checkout init --cone
+                   git sparse-checkout set ${MODULE}
+                   git checkout ${BRANCH}
+                   '''
+                }
+            }
+        }
+        stage('Gradle Build') {
+            steps {
+                script {
+                    sh "gradle :${MODULE}:build"
+                    echo "Running Gradle Build Completed"
+                }
+            }
+        }
+
+       stage('Docker Build & Push on EC2') {
+           steps {
+               script {
+                     withCredentials([
+                          string(credentialsId: "AWS_ACCOUNT_ID", variable: 'AWS_ACCOUNT_ID')
+                       ]) {
+                        def imageTag = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${PROJECT_NAME}"
+                        def fullImageTag = "${imageTag}:${MODULE}-${BUILD_NUMBER}"
+                        def latestTag = "${imageTag}:${MODULE}-latest"
+                        docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com", "ecr:${AWS_REGION}:AWS_ECR_KEY") {
+                            def appImage = docker.build(fullImageTag, "./${MODULE}")
+                            appImage.push()
+                            sh "docker tag ${fullImageTag} ${latestTag}"
+                            sh "docker push ${latestTag}"
+
+                           echo "pushed to Docker"
+                       }
+                   }
+               }
+           }
+       }
+
+        stage('Deploy to EC2') {
+            steps {
+                script {
+                    echo "Deploy in EC2"
+                    withCredentials([sshUserPrivateKey(credentialsId: "EC2_SSH", keyFileVariable: 'EC2_SSH')]) {
+                        def remote = [
+                            name: "EC2-Instance",
+                            host: "${EC2_HOST}",
+                            user: 'ec2-user',
+                            identityFile: EC2_SSH,
+                            allowAnyHosts: true
+                        ]
+                        def modulePort = "8086"
+                        def imageTag = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${PROJECT_NAME}:${MODULE}-latest"
+
+                        echo "Log in to Docker in EC2"
+
+                        sshCommand remote: remote, command: "/usr/bin/docker login -u AWS -p \$(aws ecr get-login-password --region ${AWS_REGION}) ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+
+                        echo "Stopping and removing existing container"
+                        sshCommand remote: remote, command: "docker stop ${MODULE} || true"
+                        sshCommand remote: remote, command: "docker rm ${MODULE} || true"
+
+                        echo "Removing old Docker image"
+                        sshCommand remote: remote, command: "docker rmi ${imageTag} || true"
+
+                        echo "Pulling latest Docker image"
+                        sshCommand remote: remote, command: "docker pull ${imageTag}"
+
+                        echo "Starting new container"
+                        sshCommand remote: remote, command: "docker run -d --rm --name ${MODULE} -p ${modulePort}:${modulePort} ${imageTag}"
+                    }
+                }
+            }
+        }
+    }
+}
+
+
