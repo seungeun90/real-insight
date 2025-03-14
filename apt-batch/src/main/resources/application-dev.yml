@@ -14,7 +14,7 @@ spring:
   r2dbc:
     properties:
       reconnect: true
-    url: r2dbc:mariadb://localhost:3306/apt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: r2dbc:mariadb://ip-172-31-45-181.ap-northeast-2.compute.internal:3306/apt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: admin
     password: admin
     pool:
@@ -25,7 +25,7 @@ spring:
       validation-query: "SELECT 1"
   datasource:
     service:
-      jdbc-url: jdbc:mysql://localhost:3306/apt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mysql://ip-172-31-45-181.ap-northeast-2.compute.internal:3306/apt?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       username: admin
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -36,7 +36,7 @@ spring:
         validation-timeout: 1000
         max-lifetime: 1795000
     batch:
-      jdbc-url: jdbc:mysql://localhost:3306/apt_batch?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mysql://ip-172-31-45-181.ap-northeast-2.compute.internal:3306/apt_batch?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       username: admin
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -56,3 +56,6 @@ spring:
         show_sql: true
         format_sql: true
     show-sql: true
+apt-api:
+  url: "https://api.odcloud.kr/api/AptIdInfoSvc/v1/getAptInfo"
+  key: ${APT_API_SECRET}

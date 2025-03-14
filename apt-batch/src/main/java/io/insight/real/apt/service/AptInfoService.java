@@ -1,5 +1,6 @@
 package io.insight.real.apt.service;
 
+import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.response.AptIdInfo;
 import io.insight.real.apt.dto.response.AptResponse;
 import io.insight.real.apt.repository.entity.AptInfo;
@@ -27,6 +28,7 @@ public class AptInfoService {
     private final CommonWebClientService webClientService;
     private final AptInfoMapper aptInfoMapper;
     private final AptInfoRepository aptInfoRepository;
+    private final ApiProperties apiProperties;
 
     public void updateAptTradeInfo(String addr){
         URI url = buildUrl(0, addr);
@@ -78,8 +80,8 @@ public class AptInfoService {
     }
 
     private URI buildUrl(int pageNo, String addr) {
-        String baseUrl = "https://api.odcloud.kr/api/AptIdInfoSvc/v1/getAptInfo";
-        String serviceKey = "gJFPGFZmoaEcP4T%2BMZpkkl%2BK50fCQUWgHpz8LBeSXx4VliUacXRUr5o%2FvxLiUYF9AoGANN%2BGbEpiDLpYZEdu2g%3D%3D";
+        String baseUrl = apiProperties.getUrl();
+        String serviceKey = apiProperties.getKey();
         int numOfRows = 100;
         String encodedCond = URLEncoder.encode("cond[ADRES::LIKE]", StandardCharsets.UTF_8);
         String encodedAddr = URLEncoder.encode(addr, StandardCharsets.UTF_8).replace("+", "%20"); // 띄어쓰기`+`를 `%20`으로 변환
