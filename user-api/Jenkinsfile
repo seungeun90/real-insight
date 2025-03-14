@@ -100,7 +100,7 @@ pipeline {
                             identityFile: EC2_SSH,
                             allowAnyHosts: true
                         ]
-                        def modulePort = "8086"
+                        def modulePort = "8082"
                         def imageTag = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${PROJECT_NAME}:${MODULE}-latest"
 
                         echo "Log in to Docker in EC2"
