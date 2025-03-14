@@ -1,5 +1,4 @@
 let realEstateData;
-let addr = 'http://15.164.133.223';
 function loadAptHistory() {
     let regionCode = findRegionCode();
     if(regionCode==null) return;
