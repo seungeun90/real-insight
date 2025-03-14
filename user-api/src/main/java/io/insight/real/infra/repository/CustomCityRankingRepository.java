@@ -139,35 +139,26 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
         return mongoTemplate.find(query, Employment.class, "employment");
     }
 
-    public CityPopulationData getPopulationDataInCity(String provinceCode, String cityCode) {
-        //인구 정보는 연도 조건 없음
-        Query common = new Query();
+    public List<CityBasicInfo> getTownInfoInCity(String provinceCode, String cityCode) {
+        Query query = new Query();
+        //Map<String, String> cityCodes = getCityCodes(provinceCode);
+        //List<String> admCdList = new ArrayList<>(cityCodes.keySet());
 
-        if (provinceCode != null) {
-            common.addCriteria(Criteria.where("provinceCode").is(provinceCode));
-        }
-        if (cityCode != null) {
-            common.addCriteria(Criteria.where("cityCode").is(cityCode));
-        }
+        query.fields().include("totalPopulation")
+                .include("householdCount")
+                .include("averageHouseholdSize")
+                .include("provinceCode")
+                .include("cityCode")
+                .include("admCd");
 
-        List<CityPopulation> population = getPopulation(common);
-        List<PopRankingData> populationRank = getPopulationRank(common);
+        query.addCriteria(Criteria.where("provinceCode").is(provinceCode));
+        query.addCriteria(Criteria.where("cityCode").is(cityCode));
+        //Criteria.where("townCode").is("");
+       // query.addCriteria(Criteria.where("admcd").regex("^" + provinceCode + cityCode));
+        query.addCriteria(Criteria.where("year").is("2023"));
+        List<CityBasicInfo> cityBasic = mongoTemplate.find(query, CityBasicInfo.class, "city_basic");
 
-        return CityPopulationData.builder()
-                .cityPopulation(population)
-                .popRankingData(populationRank)
-                .build();
-
-    }
-
-    private List<CityPopulation> getPopulation(Query query) {
-        return mongoTemplate.find(query, CityPopulation.class, "population");
-    }
-    /**
-     *
-     * */
-    private List<PopRankingData> getPopulationRank(Query query) {
-        return mongoTemplate.find(query, PopRankingData.class, "pop_ranking");
+        return cityBasic;
     }
 
     /**
