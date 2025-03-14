@@ -1,0 +1,92 @@
+server:
+  port: 8085
+spring:
+  batch:
+    jdbc:
+      initialize-schema: never
+    job:
+      enabled: false  # 자동 실행 방지
+  datasource:
+    service:
+      jdbc-url: jdbc:mysql://localhost:3306/city?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      username: admin
+      password: admin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 5
+        idle-timeout: 10000
+        connection-timeout: 10000
+        validation-timeout: 1000
+        max-lifetime: 1795000
+    batch:
+      jdbc-url: jdbc:mysql://localhost:3306/city_batch?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      username: admin
+      password: admin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 5
+        idle-timeout: 10000
+        connection-timeout: 10000
+        validation-timeout: 1000
+        max-lifetime: 1795000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        storage_engine: innodb
+        show_sql: true
+        format_sql: true
+    show-sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username : admin
+    password: secret
+
+rabbitmq:
+  population:
+    exchange-name: real-exchange
+    queue-name: pop-queue
+    routing-key: pop-key
+    durable: true
+    exclusive: false
+    auto-delete: false
+  city:
+    exchange-name: real-exchange
+    queue-name: city-queue
+    routing-key: city-key
+    durable: true
+    exclusive: false
+    auto-delete: false
+  employment:
+    exchange-name: real-exchange
+    queue-name: emp-queue
+    routing-key: emp-key
+    durable: true
+    exclusive: false
+    auto-delete: false
+  district:
+    exchange-name: real-exchange
+    queue-name: district-queue
+    routing-key: district-key
+    durable: true
+    exclusive: false
+    auto-delete: false
+  ranking:
+    exchange-name: real-exchange
+    durable: true
+    exclusive: false
+    auto-delete: false
+    city:
+      queue-name: city-rank-queue
+      routing-key: city-rank-key
+    population:
+      queue-name: pop-rank-queue
+      routing-key: pop-rank-key
+  dead-letter:
+    exchange-name: dead-exchange
+    queue-name: dead-queue
+    routing-key: dead-key
+    durable: true

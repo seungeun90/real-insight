@@ -8,7 +8,7 @@ spring:
       enabled: false  # 자동 실행 방지
   datasource:
     service:
-      jdbc-url: jdbc:mysql://localhost:3306/district?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mysql://ip-172-31-45-181.ap-northeast-2.compute.internal:3306/city?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       username: admin
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,7 +19,7 @@ spring:
         validation-timeout: 1000
         max-lifetime: 1795000
     batch:
-      jdbc-url: jdbc:mysql://localhost:3306/batch_schema?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mysql://ip-172-31-45-181.ap-northeast-2.compute.internal:3306/city_batch?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       username: admin
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -90,3 +90,6 @@ rabbitmq:
     queue-name: dead-queue
     routing-key: dead-key
     durable: true
+city-api:
+  key: ${CITY_CONSUMER_KEY}
+  secret: ${CITY_CONSUMER_SECRET}

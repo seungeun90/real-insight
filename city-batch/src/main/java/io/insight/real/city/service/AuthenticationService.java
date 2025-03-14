@@ -1,5 +1,6 @@
 package io.insight.real.city.service;
 
+import io.insight.real.city.config.properties.ApiProperties;
 import io.insight.real.city.dto.SgisToken;
 import io.insight.real.city.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class AuthenticationService {
     private final RestClient restClient;
     private final AtomicReference<SgisToken> ATOMIC_TOKEN = new AtomicReference<>(null);
+    private final ApiProperties apiProperties;
 
     public String getAccessToken()  {
         String cachedToken = null;
@@ -66,8 +68,8 @@ public class AuthenticationService {
                     .method(HttpMethod.GET)
                     .uri(uriBuilder -> uriBuilder
                             .path("/auth/authentication.json")
-                            .queryParam("consumer_key", "632708e7d0b743a48fca")
-                            .queryParam("consumer_secret", "a4836681ec2e4513b38d")
+                            .queryParam("consumer_key", apiProperties.getKey())
+                            .queryParam("consumer_secret", apiProperties.getSecret())
                             .build())
                     .retrieve()
                     .body(new ParameterizedTypeReference<ApiResponse>() {});
