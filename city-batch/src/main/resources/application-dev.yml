@@ -1,6 +1,8 @@
 server:
   port: 8085
 spring:
+  application:
+    name: city-batch
   batch:
     jdbc:
       initialize-schema: never
@@ -93,3 +95,14 @@ rabbitmq:
 city-api:
   key: ${CITY_CONSUMER_KEY}
   secret: ${CITY_CONSUMER_SECRET}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true

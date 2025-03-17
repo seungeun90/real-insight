@@ -1,6 +1,8 @@
 server:
   port: 8086
 spring:
+  application:
+    name: apt-batch
   batch:
     jdbc:
       initialize-schema: never
@@ -59,3 +61,14 @@ spring:
 apt-api:
   url: "https://api.odcloud.kr/api/AptIdInfoSvc/v1/getAptInfo"
   key: ${APT_API_SECRET}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true

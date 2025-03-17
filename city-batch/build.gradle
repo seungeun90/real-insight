@@ -12,6 +12,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
 
+    //엑셀
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
     dependencies {
         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
             implementation 'io.netty:netty-resolver-dns-native-macos:4.1.100.Final:osx-aarch_64'
