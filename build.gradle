@@ -46,6 +46,10 @@ subprojects {
 		implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
 		implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+
+		implementation 'org.springframework.boot:spring-boot-starter-actuator'
+		implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	}
 
 	tasks.named('test') {
