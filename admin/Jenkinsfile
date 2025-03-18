@@ -4,7 +4,7 @@ pipeline {
         gradle 'gradle'
     }
     environment {
-        MODULE = "front"
+        MODULE = "admin"
         BRANCH = 'develop'
         DEPLOY_STAGE = 'dev'
         ROOT_PROJECT ='real-insight'
