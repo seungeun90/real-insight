@@ -1,17 +1,3 @@
-// 연/월 select box 생성
-const currentYear = new Date().getFullYear();
-const startYear = document.getElementById('startYear');
-const endYear = document.getElementById('endYear');
-for (let y = currentYear - 5; y <= currentYear + 1; y++) {
-    startYear.innerHTML += `<option value="${y}">${y}년</option>`;
-    endYear.innerHTML += `<option value="${y}">${y}년</option>`;
-}
-const startMonth = document.getElementById('startMonth');
-const endMonth = document.getElementById('endMonth');
-for (let m = 1; m <= 12; m++) {
-    startMonth.innerHTML += `<option value="${m}">${m}월</option>`;
-    endMonth.innerHTML += `<option value="${m}">${m}월</option>`;
-}
 
 let cityAddr = 'http://15.164.133.223:8085';
 let aptAddr = 'http://15.164.133.223:8086';
