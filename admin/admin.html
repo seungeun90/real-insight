@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>관리자 페이지</title>
+    <script defer src="admin.js"></script>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <div class="container">
+        <h2>관리자 페이지</h2>
+
+        <!-- 1. City 코드 업로드 -->
+        <div class="section">
+            <h3>City 코드 업로드</h3>
+            <input type="file" id="cityFile" accept=".xlsx, .xls" />
+            <button onclick="uploadCityDistrictCode()">업로드</button>
+            <div class="count" id="cityCount">로드된 데이터: 0건</div>
+        </div>
+
+        <!-- 2. APT 코드 업로드 -->
+        <div class="section">
+            <h3>APT 코드 업로드</h3>
+            <input type="file" id="aptFile" accept=".txt" />
+            <button onclick="uploadAptRegionCode()">업로드</button>
+            <div class="count" id="aptCount">로드된 데이터: 0건</div>
+        </div>
+
+        <h2>배치 시작 메뉴</h2>
+
+        <!-- 지역 정보 배치 -->
+        <div class="section">
+            <h3>지역 정보 배치</h3>
+            <label>지역코드 선택
+                <select id="province">
+                    <option value="">시/도 선택</option>
+                </select>
+            </label>
+            <label>연도 선택
+                <select id="year">
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                </select>
+            </label>
+            <label>배치 종류 선택</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" value="지역정보" /> 지역정보</label>
+                <label><input type="checkbox" value="인구비율" /> 인구비율</label>
+                <label><input type="checkbox" value="직장정보" /> 직장정보</label>
+            </div>
+            <button onclick="startRegionBatch()">Save</button>
+        </div>
+
+        <!-- 아파트 거래 정보 배치 -->
+        <div class="section">
+            <h3>아파트 거래 정보 배치</h3>
+            <label>지역코드 선택
+                <select id="region">
+                </select>
+            </label>
+            <label>시작 날짜 선택
+                <input type="month" id="startDate">
+            </label>
+            <label>종료 날짜 선택
+                <input type="month" id="endDate">
+            </label>
+            <button onclick="startAptBatch()">Save</button>
+        </div>
+        <!-- 4. 배치 내역 -->
+        <div class="section">
+            <h3>배치 작업 현황</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>배치 ID</th>
+                    <th>타입</th>
+                    <th>상태</th>
+                    <th>처리 건수</th>
+                    <th>실행일</th>
+                </tr>
+                </thead>
+                <tbody id="batchTable">
+                <!-- 배치 내역 데이터가 여기에 추가됨 -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>

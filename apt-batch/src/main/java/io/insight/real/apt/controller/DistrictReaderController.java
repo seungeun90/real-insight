@@ -1,6 +1,5 @@
 package io.insight.real.apt.controller;
 
-import io.insight.real.apt.repository.entity.LegalDistrict;
 import io.insight.real.apt.repository.entity.Region;
 import io.insight.real.apt.service.LegalDistrictService;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,16 @@ public class DistrictReaderController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @GetMapping("/districts/count")
+    public ResponseEntity<?> getDistrictDataCount(){
+        long count = legalDistrictService.getDistrictsCount();
+        return ResponseEntity.status(HttpStatus.OK).body(count);
+    }
+
     @GetMapping("/regions")
     public ResponseEntity<?> getDistrictData(){
-        List<Region> regions = legalDistrictService.getLegalDistrict();
+        List<Region> regions = legalDistrictService.getRegions();
         return ResponseEntity.status(HttpStatus.OK).body(regions);
     }
+
 }

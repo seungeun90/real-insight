@@ -28,7 +28,7 @@ public class LegalDistrictService {
     private final RegionRepository regionRepository;
     private final ProvinceRepository provinceRepository;
 
-    public List<Region> getLegalDistrict() {
+    public List<Region> getRegions() {
         return regionRepository.findAllByStatus("존재");
     }
 
@@ -75,5 +75,9 @@ public class LegalDistrictService {
             log.error(e.getMessage());
         }
 
+    }
+
+    public long getDistrictsCount() {
+        return districtRepository.count();
     }
 }

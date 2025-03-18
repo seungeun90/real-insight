@@ -25,6 +25,11 @@ import java.util.Objects;
 public class ExcelReaderService {
     private final AdministrativeDistrictRepository repository;
 
+
+    public long getDistrictDataCount(){
+        return repository.count();
+    }
+
     @Transactional
     public void readAndInsertExcel(MultipartFile file) {
         List<AdministrativeDistrict> districts = new ArrayList<>();

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,5 +21,12 @@ public class DistrictExcelUploadController {
         excelReaderService.readAndInsertExcel(file);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
+
+    @GetMapping("/districts/count")
+    public ResponseEntity<?> getDistrictData(){
+        long districtDataCount = excelReaderService.getDistrictDataCount();
+        return ResponseEntity.status(HttpStatus.OK).body(districtDataCount);
+    }
+
 
 }

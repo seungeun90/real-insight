@@ -2,7 +2,7 @@ let realEstateData;
 function loadAptHistory() {
     let regionCode = findRegionCode();
     if(regionCode==null) return;
-    let url = addr + ':8086/apt/trade/region/' + regionCode +"?size="+"84";
+    let url = aptAddr + '/apt/trade/region/' + regionCode +"?size="+"84";
     fetchData(url, data => {
         realEstateData = data;
         drawAptHistoryTable();
