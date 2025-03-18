@@ -3,6 +3,19 @@ let cityAddr = 'http://15.164.133.223:8085';
 let aptAddr = 'http://15.164.133.223:8086';
 let userAddr = 'http://15.164.133.223:8082';
 
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     loadCityDistrictCodeCount();
     loadAptRegionCodeCount();
