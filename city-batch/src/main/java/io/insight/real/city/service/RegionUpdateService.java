@@ -45,7 +45,7 @@ public class RegionUpdateService {
             TownDto townDto = new TownDto();
             townDto.setTownName(district.getTownName());
             townDto.setTownCode(district.getTownCode());
-            log.info("City Town:name{}, code{} " + townDto.getTownName(), townDto.getTownCode());
+            log.info("City Town:name{}, code{} " ,townDto.getTownName(), townDto.getTownCode());
             city.getTowns().add(townDto);
         }
 
