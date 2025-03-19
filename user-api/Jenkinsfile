@@ -13,6 +13,15 @@ pipeline {
         choice choices: ['develop', 'stage', 'main'], name: 'GIT_REF_MANUAL'
     }
     stages {
+        stage('Cleanup Docker') {
+            steps {
+                sh '''
+                docker container prune -f
+                docker image prune -a -f
+                docker builder prune -f
+                '''
+            }
+        }
         stage('Initialize BRANCH & DEPLOY_STAGE') {
             steps {
                script {
