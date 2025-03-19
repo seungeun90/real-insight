@@ -22,6 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
     loadCityProvinces();
     loadProvincesForApt();
 });
+function sendCityDistrictCode() {
+    fetchData(cityAddr + '/districts/temp', data => {
+        console.log("완료");
+    });
+}
 
 // city 코드 업로드 (엑셀)
 function uploadCityDistrictCode() {
