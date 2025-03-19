@@ -1,7 +1,7 @@
 
-let cityAddr = 'http://172.31.12.124:8085';
-let aptAddr = 'http://172.31.12.124:8086';
-let userAddr = 'http://172.31.12.124:8082';
+let cityAddr = 'http://15.164.133.223:8085';
+let aptAddr = 'http://15.164.133.223:8086';
+let userAddr = 'http://15.164.133.223:8082';
 
 const tabs = document.querySelectorAll('.tab');
 const contents = document.querySelectorAll('.tab-content');
@@ -19,6 +19,8 @@ tabs.forEach(tab => {
 document.addEventListener("DOMContentLoaded", function () {
     loadCityDistrictCodeCount();
     loadAptRegionCodeCount();
+    loadCityProvinces();
+    loadProvincesForApt();
 });
 
 // city 코드 업로드 (엑셀)
