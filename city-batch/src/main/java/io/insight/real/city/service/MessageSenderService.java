@@ -2,6 +2,7 @@ package io.insight.real.city.service;
 
 import io.insight.real.city.config.properties.QueueProperties;
 import io.insight.real.city.dto.PopRankingDto;
+import io.insight.real.city.dto.ProvinceDto;
 import io.insight.real.city.dto.RankedInfoDto;
 import io.insight.real.city.repository.entity.CityBasicInfo;
 import io.insight.real.city.repository.entity.CityPopulation;
@@ -45,7 +46,7 @@ public class MessageSenderService {
         QueueProperties.Ranking ranking = queueProperties.getRanking();
         publishMessage(rankings, ranking.getExchangeName(), ranking.getPopulation().getRoutingKey());
     }
-    public void publishDistrictMessage(Map<String, Object> map){
+    public void publishDistrictMessage(ProvinceDto map){
         QueueProperties.District district = queueProperties.getDistrict();
         publishMessage(map, district.getExchangeName(), district.getRoutingKey());
     }
