@@ -3,6 +3,7 @@ package io.insight.real.city.service;
 import io.insight.real.city.repository.entity.AdministrativeDistrict;
 import io.insight.real.city.repository.jpa.AdministrativeDistrictRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ExcelReaderService {
@@ -51,10 +53,7 @@ public class ExcelReaderService {
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
 
-                if (isFirstRow) {
-                    isFirstRow = false;
-                    continue;
-                }
+                log.info("city code= {} name={}", getCellValue(row.getCell(2)),getCellValue(row.getCell(3)));
                 AdministrativeDistrict district = AdministrativeDistrict.builder()
                         .provinceCode(getCellValue(row.getCell(0)))  // 시도코드
                         .provinceName(getCellValue(row.getCell(1)))  // 시도명칭
