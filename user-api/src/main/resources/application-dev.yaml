@@ -5,7 +5,7 @@ spring:
     name: user-api
   data:
     mongodb:
-      host: ec2-3-38-240-66.ap-northeast-2.compute.amazonaws.com
+      host: ip-172-31-45-181.ap-northeast-2.compute.internal
       port: 27017
       database: user
       username: admin
