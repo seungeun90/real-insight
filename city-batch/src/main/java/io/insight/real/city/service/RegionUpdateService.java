@@ -11,8 +11,15 @@ import java.util.*;
 @Service
 public class RegionUpdateService {
     private final AdministrativeDistrictRepository districtRepository;
+    private final MessageSenderService messageSenderService;
 
-    public Map<String, Object>  getDistrict(String provinceCode) {
+    public void publishDistrictMessage(){
+        List<String> distinctProvinceCodes = districtRepository.findDistinctProvinceCodes();
+        for (String code : distinctProvinceCodes) {
+            messageSenderService.publishDistrictMessage(getDistrict(code));
+        }
+    }
+    private Map<String, Object> getDistrict(String provinceCode) {
         List<AdministrativeDistrict> districts = districtRepository.findByProvinceCode(provinceCode);
         // 도시별로 그룹화
         Map<String, Map<String, Object>> cityMap = new LinkedHashMap<>();
@@ -27,8 +34,12 @@ public class RegionUpdateService {
 
             // towns 배열 추가
             cityMap.get(cityKey)
-                    .computeIfAbsent("towns", k -> new ArrayList<String>());
-            ((List<String>) cityMap.get(cityKey).get("towns")).add(district.getTownName());
+                    .computeIfAbsent("towns", k -> new ArrayList<Map<String, String>>());
+
+            // Map으로 town 추가 (이름:코드)
+            Map<String, String> townMap = new HashMap<>();
+            townMap.put(district.getTownName(), district.getTownCode());
+            ((List<Map<String, String>>) cityMap.get(cityKey).get("towns")).add(townMap);
         }
 
         // 최종 JSON 구조 생성
@@ -39,5 +50,6 @@ public class RegionUpdateService {
 
         return provinceJson;
     }
+
 
 }

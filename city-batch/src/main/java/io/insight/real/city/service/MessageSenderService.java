@@ -12,6 +12,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,7 +45,13 @@ public class MessageSenderService {
         QueueProperties.Ranking ranking = queueProperties.getRanking();
         publishMessage(rankings, ranking.getExchangeName(), ranking.getPopulation().getRoutingKey());
     }
-
+    public void publishDistrictMessage(Map<String, Object> map){
+        QueueProperties.District district = queueProperties.getDistrict();
+        publishMessage(map, district.getExchangeName(), district.getRoutingKey());
+    }
+    public void publishMessage(Object message, String exchange, String routingKey) {
+        rabbitTemplate.convertAndSend(exchange, routingKey, message);
+    }
     public void publishMessage(List<?> messages, String exchange, String routingKey) {
         messages.forEach(message -> rabbitTemplate.convertAndSend(exchange, routingKey, message));
     }

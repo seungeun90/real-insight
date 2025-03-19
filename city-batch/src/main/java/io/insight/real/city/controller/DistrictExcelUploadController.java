@@ -1,6 +1,7 @@
 package io.insight.real.city.controller;
 
 import io.insight.real.city.service.ExcelReaderService;
+import io.insight.real.city.service.RegionUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DistrictExcelUploadController {
 
     private final ExcelReaderService excelReaderService;
+    private final RegionUpdateService regionUpdateService;
 
     @PostMapping("/district")
     public ResponseEntity<?> uploadDistrictData(@RequestParam("file") MultipartFile file){
@@ -28,5 +30,9 @@ public class DistrictExcelUploadController {
         return ResponseEntity.status(HttpStatus.OK).body(districtDataCount);
     }
 
-
+    @GetMapping("/districts/temp")
+    public ResponseEntity<?> sendDistrictDataToUserSystem(){
+        regionUpdateService.publishDistrictMessage();
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 }
