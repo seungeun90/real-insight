@@ -37,7 +37,7 @@ public class RegionUpdateService {
             CityDto city = cityMap.get(cityKey);
             city.setCityCode(district.getCityDistrictCode());
             city.setCityName(district.getCityDistrictName());
-
+            log.info("getCity :name{}, code{} " ,district.getCityDistrictCode(), district.getCityDistrictName());
             if (city.getTowns() == null) {
                 city.setTowns(new ArrayList<>());
             }
