@@ -22,7 +22,6 @@ public class RegionUpdateService {
         List<String> distinctProvinceCodes = districtRepository.findDistinctProvinceCodes();
         for (String code : distinctProvinceCodes) {
             ProvinceDto district = getDistrict(code);
-
             messageSenderService.publishDistrictMessage(district);
         }
     }
@@ -46,6 +45,7 @@ public class RegionUpdateService {
             TownDto townDto = new TownDto();
             townDto.setTownName(district.getTownName());
             townDto.setTownCode(district.getTownCode());
+            log.info("City Town:name{}, code{} " + townDto.getTownName(), townDto.getTownCode());
             city.getTowns().add(townDto);
         }
 
