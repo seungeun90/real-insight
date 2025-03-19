@@ -46,7 +46,7 @@ public class MessageSenderService {
         QueueProperties.Ranking ranking = queueProperties.getRanking();
         publishMessage(rankings, ranking.getExchangeName(), ranking.getPopulation().getRoutingKey());
     }
-    public void publishDistrictMessage(ProvinceDto map){
+    public void publishDistrictMessage(Map<String, Object> map){
         QueueProperties.District district = queueProperties.getDistrict();
         publishMessage(map, district.getExchangeName(), district.getRoutingKey());
     }

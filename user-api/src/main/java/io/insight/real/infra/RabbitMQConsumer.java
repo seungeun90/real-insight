@@ -92,7 +92,7 @@ public class RabbitMQConsumer {
         }
     }
     @RabbitListener(queues = "district-queue", ackMode = "MANUAL")
-    public void receiveDistrictMessage(ProvinceDto message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+    public void receiveDistrictMessage(Map<String, Object> message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
         log.info("Received city Ranking Messages.. ");
 
         try {

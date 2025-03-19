@@ -65,7 +65,7 @@ public class BatchInsertService {
         mongoTemplate.insert(cityRankingData, CityRankingData.getCollectionName());
     }
 
-    public void saveDistrictData(ProvinceDto message) {
+    public void saveDistrictData(Map<String, Object> message) {
         mongoTemplate.insert(message, "district");
     }
 }
