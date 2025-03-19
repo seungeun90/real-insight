@@ -64,7 +64,7 @@ function uploadAptRegionCode() {
         body: formData
     }).then(() => {
         alert('APT 코드 업로드 완료');
-        loadAptCount();
+        loadAptRegionCodeCount();
     });
 }
 // count 불러오기
