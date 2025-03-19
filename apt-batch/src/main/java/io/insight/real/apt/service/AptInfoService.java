@@ -45,7 +45,7 @@ public class AptInfoService {
                     int matchCount = apiResponse.getMatchCount();
                     int totalPages = (int) Math.ceil((double) matchCount / perPage);
 
-                    log.info("✅ matchCount {}, totalPages {}",matchCount, totalPages);
+                    log.info("matchCount {}, totalPages {}",matchCount, totalPages);
                     //아파트만 저장
                     Flux<AptIdInfo> firstPageItems =
                             Flux.fromIterable(list)
@@ -56,7 +56,7 @@ public class AptInfoService {
                             .delayElements(Duration.ofMillis(500))
                             .flatMap(pageNo -> webClientService.executeRequest(buildUrl(pageNo, url),AptResponse.class, BodyInserters.empty(), Flux::just))
                             .flatMap(response -> {
-                                log.info("✅ 페이지 {}", response.getPage());
+                                log.info("페이지 {}", response.getPage());
                                 return Flux.fromIterable(response.getData())
                                         .filter(dto -> "1".equals(dto.getComplexGbCd()));
                             });
@@ -69,7 +69,7 @@ public class AptInfoService {
     private Mono<Void> saveBatchToDatabase(List<AptIdInfo> items) {
         log.info("db save target=== {}", items.size());
         if (items.isEmpty()) {
-            log.warn("⚠ 저장할 데이터가 없음!");
+            log.warn("저장할 데이터가 없음!");
             return Mono.empty();
         }
         List<AptInfo> entities = aptInfoMapper.toEntities(items);

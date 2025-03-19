@@ -155,6 +155,14 @@ function startRegionBatch() {
     alert('선택한 배치가 모두 예약되었습니다.');
 }
 
+function updateAptInfo() {
+    let url = aptAddr + '/apt';
+    fetchData(url, data => {
+       console.log("완료");
+    });
+}
+
+
 function startAptBatch() {
     const regionCode = document.getElementById('region').value;
     const startDate = document.getElementById('startDate').value;

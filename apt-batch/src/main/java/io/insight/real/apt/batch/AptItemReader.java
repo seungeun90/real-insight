@@ -1,5 +1,6 @@
 package io.insight.real.apt.batch;
 
+import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.response.AptResponse;
 import io.insight.real.apt.service.CommonWebClientService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,14 @@ public class AptItemReader  implements ItemReader<URI> {
     private int currentPage = 0;
     private int totalPages = 0;
     private final CommonWebClientService webClientService;
+    private final ApiProperties apiProperties;
 
     public AptItemReader(
             CommonWebClientService webClientService,
+            ApiProperties apiProperties,
             @Value("#{jobParameters['adres']}") String adres) {
         this.webClientService = webClientService;
+        this.apiProperties = apiProperties;
         this.adres = adres;
     }
     @Override
@@ -39,7 +43,7 @@ public class AptItemReader  implements ItemReader<URI> {
                     .blockFirst();
             if (response != null) {
                 totalPages = (int) Math.ceil((double) response.getMatchCount() / response.getPerPage());
-                log.info("✅ 총 페이지 수 설정: {}", totalPages);
+                log.info("총 페이지 수 설정: {}", totalPages);
             }
         }
         URI uri = buildUrl(currentPage, adres);
@@ -47,8 +51,8 @@ public class AptItemReader  implements ItemReader<URI> {
         return uri;
     }
     private URI buildUrl(int pageNo, String addr) {
-        String baseUrl = "https://api.odcloud.kr/api/AptIdInfoSvc/v1/getAptInfo";
-        String serviceKey = "gJFPGFZmoaEcP4T%2BMZpkkl%2BK50fCQUWgHpz8LBeSXx4VliUacXRUr5o%2FvxLiUYF9AoGANN%2BGbEpiDLpYZEdu2g%3D%3D";
+        String baseUrl = apiProperties.getUrl();
+        String serviceKey = apiProperties.getKey();
         int numOfRows = 100;
         String encodedCond = URLEncoder.encode("cond[ADRES::LIKE]", StandardCharsets.UTF_8);
         String encodedAddr = URLEncoder.encode(addr, StandardCharsets.UTF_8).replace("+", "%20"); // 띄어쓰기`+`를 `%20`으로 변환

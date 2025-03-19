@@ -51,14 +51,6 @@ public class AptTradeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생: " + ex.getMessage());
         });
 
-      /*  try {
-            jobTriggerService.updateAptInfoJob(new AptItemRequest(addr));
-            return ResponseEntity.ok("Batch Job 실행 완료");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생: " + e.getMessage());
-        }*/
-       // aptInfoService.updateAptTradeInfo(addr);
-       // return ResponseEntity.status(HttpStatus.OK).body(null);
         return ResponseEntity.ok("Batch Job 실행 완료");
     }
 
