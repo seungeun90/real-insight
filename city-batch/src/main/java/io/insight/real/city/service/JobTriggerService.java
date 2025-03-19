@@ -37,7 +37,7 @@ public class JobTriggerService {
     }
 
     public void runUpdatePopulationInfoJob(BatchRunRequest request) throws JobExecutionException {
-        log.info("updatePopulationInfoJob start==");
+        log.info("updatePopulationInfoJob start==code={}, year={}", request.getCode(), request.getYear());
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("code", request.getCode())
                 .addString("year", request.getYear())
@@ -49,7 +49,7 @@ public class JobTriggerService {
     }
 
     public void runUpdateCityBasicInfoJob(BatchRunRequest request) throws JobExecutionException {
-        log.info("updateCityBasicInfoJob start==");
+        log.info("updateCityBasicInfoJob start==code={}, year={}", request.getCode(), request.getYear());
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("code", request.getCode())
                 .addString("year", request.getYear())
@@ -84,7 +84,7 @@ public class JobTriggerService {
     }
 
     public void runUpdateEmpJob(BatchRunRequest request) throws JobExecutionException {
-        log.info("runUpdateEmpJob start==");
+        log.info("runUpdateEmpJob start==code={}, year={}", request.getCode(), request.getYear());
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("code", request.getCode())
                 .addString("year", request.getYear())

@@ -19,9 +19,14 @@ function updateNumberDisplay(elementId,value) {
 
 function fetchData(url, callback) {
     fetch(url)
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 204) {
+                return null; // 204 No Content 일 경우 처리
+            }
+            return response.text().then(text => text ? JSON.parse(text) : null);
+        })
         .then(data => {
-            if (callback) callback(data); // 콜백 함수 실행
+            if (callback) callback(data);
         })
         .catch(error => console.error(`데이터 요청 중 오류 발생 (${url}):`, error));
 }
