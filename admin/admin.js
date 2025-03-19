@@ -5,6 +5,8 @@ let userAddr = 'http://15.164.133.223:8082';
 
 const tabs = document.querySelectorAll('.tab');
 const contents = document.querySelectorAll('.tab-content');
+const provinceSelect = document.getElementById("province");
+const regionSelect = document.getElementById("region");
 
 tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -84,7 +86,6 @@ function loadAptRegionCodeCount() {
 //Province(광역시) 목록 로드
 function loadCityProvinces() {
     let url = userAddr + '/districts';
-    const provinceSelect = document.getElementById("province");
     fetchData(url, data => {
         locationData = data;
         provinceSelect.innerHTML = `<option value="">시/도 선택</option>`;
@@ -99,7 +100,7 @@ function loadCityProvinces() {
 
 function loadProvincesForApt() {
     let url =  aptAddr + '/regions';
-    const regionSelect = document.getElementById("region");
+
     fetchData(url, data => {
         aptLocationCode = data;
         regionSelect.innerHTML = `<option value="">시/도 선택</option>`;
@@ -124,9 +125,9 @@ function startRegionBatch() {
 
     // batchType 별 URL 매핑
     const urlMap = {
-        '지역정보': 'http://localhost:8085/batch/city',
-        '인구비율': 'http://localhost:8085/batch/population',
-        '직장정보': 'http://localhost:8085/batch/city/employ'
+        '지역정보': cityAddr + '/batch/city',
+        '인구비율': cityAddr + '/batch/population',
+        '직장정보': cityAddr + '/batch/city/employ'
     };
 
     // 선택된 모든 배치 각각 호출
