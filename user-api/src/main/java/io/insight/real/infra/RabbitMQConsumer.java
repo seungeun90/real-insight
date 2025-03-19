@@ -1,11 +1,10 @@
 package io.insight.real.infra;
 
 import com.rabbitmq.client.Channel;
-import io.insight.real.dto.ProvinceDto;
-import io.insight.real.infra.repository.entity.CityBasicInfo;
-import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.dto.CityRankingData;
 import io.insight.real.dto.PopRankingData;
+import io.insight.real.infra.repository.entity.CityBasicInfo;
+import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.infra.repository.entity.Employment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

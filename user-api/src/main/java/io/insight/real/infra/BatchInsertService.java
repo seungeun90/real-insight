@@ -1,11 +1,10 @@
 package io.insight.real.infra;
 
 
-import io.insight.real.dto.ProvinceDto;
-import io.insight.real.infra.repository.entity.CityBasicInfo;
-import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.dto.CityRankingData;
 import io.insight.real.dto.PopRankingData;
+import io.insight.real.infra.repository.entity.CityBasicInfo;
+import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.infra.repository.entity.Employment;
 import io.insight.real.infra.repository.jpa.CityDataRepository;
 import io.insight.real.infra.repository.jpa.EmploymentRepository;

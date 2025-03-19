@@ -1,8 +1,5 @@
 package io.insight.real.city.service;
 
-import io.insight.real.city.dto.CityDto;
-import io.insight.real.city.dto.ProvinceDto;
-import io.insight.real.city.dto.TownDto;
 import io.insight.real.city.repository.entity.AdministrativeDistrict;
 import io.insight.real.city.repository.jpa.AdministrativeDistrictRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,37 +22,7 @@ public class RegionUpdateService {
             messageSenderService.publishDistrictMessage(district);
         }
     }
-    /*private ProvinceDto getDistrict(String provinceCode) {
-        List<AdministrativeDistrict> districts = districtRepository.findByProvinceCode(provinceCode);
 
-        Map<String, CityDto> cityMap = new LinkedHashMap<>();
-
-        for (AdministrativeDistrict district : districts) {
-            String cityKey = district.getCityDistrictCode();
-
-            cityMap.putIfAbsent(cityKey, new CityDto());
-            CityDto city = cityMap.get(cityKey);
-            city.setCityCode(district.getCityDistrictCode());
-            city.setCityName(district.getCityDistrictName());
-            log.info("getCity :name{}, code{} " ,district.getCityDistrictCode(), district.getCityDistrictName());
-            if (city.getTowns() == null) {
-                city.setTowns(new ArrayList<>());
-            }
-
-            TownDto townDto = new TownDto();
-            townDto.setTownName(district.getTownName());
-            townDto.setTownCode(district.getTownCode());
-            log.info("City Town:name{}, code{} " ,townDto.getTownName(), townDto.getTownCode());
-            city.getTowns().add(townDto);
-        }
-
-        ProvinceDto province = new ProvinceDto();
-        province.set_id(provinceCode);
-        province.setProvinceName(districts.isEmpty() ? "" : districts.get(0).getProvinceName());
-        province.setCities(new ArrayList<>(cityMap.values()));
-
-        return province;
-    }*/
     private Map<String, Object> getDistrict(String provinceCode) {
         List<AdministrativeDistrict> districts = districtRepository.findByProvinceCode(provinceCode);
         // 도시별로 그룹화

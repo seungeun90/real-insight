@@ -2,7 +2,6 @@ package io.insight.real.city.service;
 
 import io.insight.real.city.config.properties.QueueProperties;
 import io.insight.real.city.dto.PopRankingDto;
-import io.insight.real.city.dto.ProvinceDto;
 import io.insight.real.city.dto.RankedInfoDto;
 import io.insight.real.city.repository.entity.CityBasicInfo;
 import io.insight.real.city.repository.entity.CityPopulation;
