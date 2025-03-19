@@ -156,7 +156,13 @@ function startRegionBatch() {
 }
 
 function updateAptInfo() {
-    let url = aptAddr + '/apt';
+    const selectedOption = regionSelect.options[regionSelect.selectedIndex];
+    const regionText = selectedOption.text;
+
+    const params = new URLSearchParams({ addr: regionText });
+    const url = aptAddr + '/apt?' + params.toString();
+
+
     fetchData(url, data => {
        console.log("완료");
     });
