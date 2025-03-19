@@ -20,22 +20,22 @@ spring:
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
-        maximum-pool-size: 5
-        idle-timeout: 10000
-        connection-timeout: 10000
-        validation-timeout: 1000
-        max-lifetime: 1795000
+        maximum-pool-size: 20
+        minimum-idle: 10
+        idle-timeout: 300000 # 5분 정도 추천
+        connection-timeout: 30000 # 30초 이상으로
+        max-lifetime: 1800000 # 30분 유지
     batch:
       jdbc-url: jdbc:mysql://ip-172-31-45-181.ap-northeast-2.compute.internal:3306/city_batch?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       username: admin
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
-        maximum-pool-size: 5
-        idle-timeout: 10000
-        connection-timeout: 10000
-        validation-timeout: 1000
-        max-lifetime: 1795000
+        maximum-pool-size: 20
+        minimum-idle: 10
+        idle-timeout: 300000 # 5분 정도 추천
+        connection-timeout: 30000 # 30초 이상으로
+        max-lifetime: 1800000 # 30분 유지
   jpa:
     hibernate:
       ddl-auto: none
