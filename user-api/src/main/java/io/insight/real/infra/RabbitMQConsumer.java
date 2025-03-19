@@ -1,6 +1,7 @@
 package io.insight.real.infra;
 
 import com.rabbitmq.client.Channel;
+import io.insight.real.dto.ProvinceDto;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.dto.CityRankingData;
@@ -91,7 +92,7 @@ public class RabbitMQConsumer {
         }
     }
     @RabbitListener(queues = "district-queue", ackMode = "MANUAL")
-    public void receiveDistrictMessage(Map<String, Object> message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+    public void receiveDistrictMessage(ProvinceDto message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
         log.info("Received city Ranking Messages.. ");
 
         try {

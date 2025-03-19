@@ -1,6 +1,7 @@
 package io.insight.real.infra;
 
 
+import io.insight.real.dto.ProvinceDto;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.dto.CityRankingData;
@@ -64,7 +65,7 @@ public class BatchInsertService {
         mongoTemplate.insert(cityRankingData, CityRankingData.getCollectionName());
     }
 
-    public void saveDistrictData(Map<String, Object> message) {
+    public void saveDistrictData(ProvinceDto message) {
         mongoTemplate.insert(message, "district");
     }
 }
