@@ -142,7 +142,7 @@ function startRegionBatch() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                regionCode: regionCode,
+                code: regionCode,
                 year: year
             })
         }).then(() => {
