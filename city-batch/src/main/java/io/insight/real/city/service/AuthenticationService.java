@@ -63,6 +63,7 @@ public class AuthenticationService {
     }
 
     public ApiResponse getAuthentication(){
+        log.info("Fetching access token...key={}, secret={}", apiProperties.getKey(), apiProperties.getSecret());
         try {
             return restClient
                     .method(HttpMethod.GET)
