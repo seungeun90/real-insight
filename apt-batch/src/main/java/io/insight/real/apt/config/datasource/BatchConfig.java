@@ -57,8 +57,8 @@ public class BatchConfig {
     @Bean
     public TaskExecutor batchTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(8);
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
         executor.setQueueCapacity(10);
         executor.setThreadNamePrefix("batch-thread-");
         executor.initialize();
