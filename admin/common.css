@@ -49,3 +49,23 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
+.inline-group {
+     display: flex;
+     align-items: center;
+     margin-top: 10px;
+ }
+.inline-group label {
+    margin-right: 5px;
+    white-space: nowrap;
+}
+.inline-group select {
+    margin-top: 0;
+}
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+.checkbox-group label input {
+    margin-right: 5px;
+}
