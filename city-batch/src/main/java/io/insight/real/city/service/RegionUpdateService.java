@@ -3,10 +3,12 @@ package io.insight.real.city.service;
 import io.insight.real.city.repository.entity.AdministrativeDistrict;
 import io.insight.real.city.repository.jpa.AdministrativeDistrictRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RegionUpdateService {
@@ -16,7 +18,11 @@ public class RegionUpdateService {
     public void publishDistrictMessage(){
         List<String> distinctProvinceCodes = districtRepository.findDistinctProvinceCodes();
         for (String code : distinctProvinceCodes) {
-            messageSenderService.publishDistrictMessage(getDistrict(code));
+            Map<String, Object> district = getDistrict(code);
+            district.keySet().forEach(districtKey -> {
+                log.info("Publishing district message for district {}.", districtKey);
+            });
+            messageSenderService.publishDistrictMessage(district);
         }
     }
     private Map<String, Object> getDistrict(String provinceCode) {
