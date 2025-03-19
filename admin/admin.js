@@ -62,14 +62,16 @@ function uploadAptRegionCode() {
 }
 // count 불러오기
 function loadCityDistrictCodeCount() {
-    fetch(cityAddr + '/districts/count')
-        .then(res => res.json())
-        .then(data => document.getElementById('cityCount').innerText = `로드된 데이터: ${data.count}건`);
+    fetchData(cityAddr + '/districts/count', data => {
+        let num = formatNumber(data);
+        document.getElementById('cityCount').innerText = `로드된 데이터: ${num}건`;
+    });
 }
 function loadAptRegionCodeCount() {
-    fetch(aptAddr + '/districts/count')
-        .then(res => res.json())
-        .then(data => document.getElementById('aptCount').innerText = `로드된 데이터: ${data.count}건`);
+    fetchData(aptAddr + '/districts/count', data => {
+        let num = formatNumber(data);
+        document.getElementById('aptCount').innerText = `로드된 데이터: ${num}건`;
+    });
 }
 
 
