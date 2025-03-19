@@ -20,7 +20,7 @@ public class RegionUpdateService {
         for (String code : distinctProvinceCodes) {
             Map<String, Object> district = getDistrict(code);
             district.keySet().forEach(districtKey -> {
-                log.info("Publishing district message for district {}.", districtKey);
+                log.info("Publishing district message for district {}.value={}", districtKey, district.get(districtKey));
             });
             messageSenderService.publishDistrictMessage(district);
         }
