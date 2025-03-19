@@ -47,7 +47,7 @@ spring:
         format_sql: true
     show-sql: true
   rabbitmq:
-    host: localhost
+    host: 15.164.133.223
     port: 5672
     username : admin
     password: secret
