@@ -71,7 +71,7 @@ pipeline {
         stage('Gradle Build') {
             steps {
                 script {
-                    sh "gradle :${MODULE}:build"
+                    sh "gradle :${MODULE}:clean :${MODULE}:build"
                     echo "Running Gradle Build Completed"
                 }
             }
