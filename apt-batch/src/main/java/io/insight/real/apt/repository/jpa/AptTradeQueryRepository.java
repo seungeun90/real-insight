@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static io.insight.real.apt.repository.entity.QAptInfoJpa.aptInfoJpa;
-import static io.insight.real.apt.repository.entity.QAptTradeJpa.aptTradeJpa;
+import static io.insight.real.apt.repository.jpa.entity.QAptInfoJpa.aptInfoJpa;
+import static io.insight.real.apt.repository.jpa.entity.QAptTradeJpa.aptTradeJpa;
 
 @RequiredArgsConstructor
 @Repository
@@ -31,6 +31,7 @@ public class AptTradeQueryRepository {
      * 21.01 ~ 22.12 최고가 & 21.01~오늘 최저가 조회 + 수익률 계산
      */
     public List<AptTradeProfit> findMaxMinPrices(String regionCode, String areaRange) {
+
         SupplyAreaRange range = SupplyAreaRange.getRange(areaRange);
         NumberExpression<Integer> maxPriceExp = new CaseBuilder()
                 .when(aptTradeJpa.dealYear.between(2021, 2022))

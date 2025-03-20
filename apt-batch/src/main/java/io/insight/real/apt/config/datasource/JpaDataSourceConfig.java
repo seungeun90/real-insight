@@ -15,7 +15,6 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-//@EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "io.insight.real.apt.repository.jpa",
         entityManagerFactoryRef = "jpaEntityManagerFactory",
