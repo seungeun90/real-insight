@@ -42,7 +42,7 @@ public class JpaDataSourceConfig {
 
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(jpaDataSource());
-        factoryBean.setPackagesToScan("io.insight.real.apt.repository.entity"); // 엔티티 패키지 경로 설정
+        factoryBean.setPackagesToScan("io.insight.real.apt.repository.jpa.entity"); // 엔티티 패키지 경로 설정
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Properties jpaProperties = new Properties();

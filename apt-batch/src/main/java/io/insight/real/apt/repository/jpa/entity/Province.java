@@ -1,4 +1,4 @@
-package io.insight.real.apt.repository.entity;
+package io.insight.real.apt.repository.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="region")
-public class Region {
+@Table(name="province")
+public class Province {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +20,7 @@ public class Region {
     private String status; // 폐지 여부
 
     @Builder
-    public Region(String code, String name, String status) {
+    public Province(String code, String name, String status) {
         this.code = code;
         this.name = name;
         this.status = status;

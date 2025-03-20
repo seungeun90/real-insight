@@ -41,10 +41,11 @@ public class AptItemReader  implements ItemReader<URI> {
         if(currentPage == 0){
             AptResponse response = webClientService.executeRequest(buildUrl(currentPage, adres), AptResponse.class, BodyInserters.empty(), Flux::just)
                     .blockFirst();
-            if (response != null) {
-                totalPages = (int) Math.ceil((double) response.getMatchCount() / response.getPerPage());
-                log.info("총 페이지 수 설정: {}", totalPages);
+            if(response == null){
+                return null;
             }
+            totalPages = (int) Math.ceil((double) response.getMatchCount() / response.getPerPage());
+            log.info("총 페이지 수 설정: {}", totalPages);
         }
         URI uri = buildUrl(currentPage, adres);
         currentPage++;

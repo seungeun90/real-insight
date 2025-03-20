@@ -1,11 +1,12 @@
-package io.insight.real.apt.service;
+package io.insight.real.apt.service.sample;
 
 import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.response.AptIdInfo;
 import io.insight.real.apt.dto.response.AptResponse;
-import io.insight.real.apt.repository.entity.AptInfo;
+import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
 import io.insight.real.apt.repository.mapper.AptInfoMapper;
 import io.insight.real.apt.repository.r2dbc.AptInfoRepository;
+import io.insight.real.apt.service.CommonWebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

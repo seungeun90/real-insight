@@ -1,7 +1,7 @@
 package io.insight.real.apt.batch.job;
 
-import io.insight.real.apt.batch.AptItemReader;
-import io.insight.real.apt.batch.AptItemWriter;
+import io.insight.real.apt.batch.AptTradeItemReader;
+import io.insight.real.apt.batch.AptTradeItemWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -14,34 +14,33 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.net.URI;
-import java.util.List;
 
 @Configuration
-public class AptItemBatchJobConfig {
+public class AptTradeItemBatchJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager platformTransactionManager;
-    private final AptItemReader aptItemReader;
-    private final AptItemWriter aptItemWriter;
+    private final AptTradeItemReader aptTradeItemReader;
+    private final AptTradeItemWriter aptTradeItemWriter;
     private final BatchJobStatusListener batchJobStatusListener;
 
-    public AptItemBatchJobConfig(
+    public AptTradeItemBatchJobConfig(
         JobRepository jobRepository,
         @Qualifier("platformTransactionManager") PlatformTransactionManager transactionManager,
-        AptItemReader aptItemReader,
-        AptItemWriter aptItemWriter,
+        AptTradeItemReader aptTradeItemReader,
+        AptTradeItemWriter aptTradeItemWriter,
         BatchJobStatusListener batchJobStatusListener
     ){
         this.jobRepository = jobRepository;
         this.platformTransactionManager = transactionManager;
-        this.aptItemReader = aptItemReader;
-        this.aptItemWriter = aptItemWriter;
+        this.aptTradeItemReader = aptTradeItemReader;
+        this.aptTradeItemWriter = aptTradeItemWriter;
         this.batchJobStatusListener = batchJobStatusListener;
     }
 
-    @Bean(name = "updateAptInfoJob")
+    @Bean(name = "updateAptTradeJob")
     public Job updateCityBasicInfoJob(
-            @Qualifier("updateAptInfoStep") Step updateAptInfoStep) {
-        return new JobBuilder("updateAptInfoJob", jobRepository)
+            @Qualifier("updateAptTradeStep") Step updateAptInfoStep) {
+        return new JobBuilder("updateAptTradeJob", jobRepository)
                 .start(updateAptInfoStep)
                 .listener(batchJobStatusListener)
                 .incrementer(new RunIdIncrementer())
@@ -49,12 +48,12 @@ public class AptItemBatchJobConfig {
                 .build();
     }
 
-    @Bean(name="updateAptInfoStep")
-    public Step updateAptInfoStep() {
-        return new StepBuilder("updateAptInfoStep", jobRepository)
+    @Bean(name="updateAptTradeStep")
+    public Step updateAptTradeStep() {
+        return new StepBuilder("updateAptTradeStep", jobRepository)
                 .<URI, URI>chunk(10, platformTransactionManager)
-                .reader(aptItemReader)
-                .writer(aptItemWriter)
+                .reader(aptTradeItemReader)
+                .writer(aptTradeItemWriter)
                 .faultTolerant()
                 .retry(Exception.class)
                 .retryLimit(1)

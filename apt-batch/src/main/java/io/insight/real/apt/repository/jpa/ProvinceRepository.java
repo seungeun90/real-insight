@@ -1,6 +1,6 @@
 package io.insight.real.apt.repository.jpa;
 
-import io.insight.real.apt.repository.entity.Province;
+import io.insight.real.apt.repository.jpa.entity.Province;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

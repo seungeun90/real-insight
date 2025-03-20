@@ -1,9 +1,9 @@
 package io.insight.real.apt.service;
 
-import io.insight.real.apt.repository.entity.Province;
-import io.insight.real.apt.repository.entity.Region;
+import io.insight.real.apt.repository.jpa.entity.Province;
+import io.insight.real.apt.repository.jpa.entity.Region;
 import io.insight.real.apt.repository.jpa.DistrictRepository;
-import io.insight.real.apt.repository.entity.LegalDistrict;
+import io.insight.real.apt.repository.jpa.entity.LegalDistrict;
 import io.insight.real.apt.repository.jpa.ProvinceRepository;
 import io.insight.real.apt.repository.jpa.RegionRepository;
 import lombok.RequiredArgsConstructor;

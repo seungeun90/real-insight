@@ -1,13 +1,14 @@
-package io.insight.real.apt.service;
+package io.insight.real.apt.service.sample;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.insight.real.apt.dto.response.ApartmentItem;
 import io.insight.real.apt.dto.response.ApiResponse;
 import io.insight.real.apt.dto.response.AptTradeProfit;
-import io.insight.real.apt.repository.entity.AptTrade;
+import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
 import io.insight.real.apt.repository.jpa.AptTradeQueryRepository;
 import io.insight.real.apt.repository.mapper.AptTradeMapper;
 import io.insight.real.apt.repository.r2dbc.AptTradeRepository;
+import io.insight.real.apt.service.CommonWebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

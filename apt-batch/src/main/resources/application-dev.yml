@@ -32,10 +32,12 @@ spring:
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
+        initialization-fail-timeout: 0
+        validation-timeout: 5000  # 커넥션 검증 타임아웃 (5초)
         maximum-pool-size: 20
         minimum-idle: 10
         idle-timeout: 300000 # 5분 정도 추천
-        connection-timeout: 30000 # 30초 이상으로
+        connection-timeout: 30000 # 커넥션 대기 시간 (30초)
         max-lifetime: 1800000 # 30분 유지
     batch:
       jdbc-url: jdbc:mysql://ip-172-31-45-181.ap-northeast-2.compute.internal:3306/apt_batch?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
@@ -43,11 +45,13 @@ spring:
       password: admin
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
+        initialization-fail-timeout: 0
+        validation-timeout: 5000  # 커넥션 검증 타임아웃 (5초)
         maximum-pool-size: 20
         minimum-idle: 10
         idle-timeout: 300000 # 5분 정도 추천
-        connection-timeout: 30000 # 30초 이상으로
-        max-lifetime: 1800000 # 30분 유지
+        connection-timeout: 30000 # 커넥션 대기 시간 (30초)
+        max-lifetime: 1800000 # 30분
   jpa:
     hibernate:
       ddl-auto: none
@@ -61,6 +65,8 @@ spring:
 apt-api:
   url: "https://api.odcloud.kr/api/AptIdInfoSvc/v1/getAptInfo"
   key: ${APT_API_SECRET}
+  trade:
+    url: "https://apis.data.go.kr/1613000/RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade"
 management:
   endpoints:
     web:

@@ -1,26 +1,21 @@
 package io.insight.real.apt.controller;
 
-import io.insight.real.apt.batch.job.AptItemRequest;
 import io.insight.real.apt.batch.job.JobTriggerService;
 import io.insight.real.apt.dto.response.AptTradeProfit;
-import io.insight.real.apt.service.AptInfoService;
-import io.insight.real.apt.service.AptTradeInfoService;
+import io.insight.real.apt.service.sample.AptInfoService;
+import io.insight.real.apt.service.sample.AptTradeInfoService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.JobExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @RestController
 public class AptTradeController {
     private final AptTradeInfoService aptTradeInfoService;
     private final AptInfoService aptInfoService;
-
     private final JobTriggerService jobTriggerService;
 
     @GetMapping("/apt/trade/region/{region}")
@@ -31,18 +26,18 @@ public class AptTradeController {
     }
 
 
-    @PostMapping("/apt/trade")
+ /*   @PostMapping("/apt/trade")
     public ResponseEntity<?> updateAptTrade(@RequestParam("regionCode") String regionCode,
                                                 @RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate){
         aptTradeInfoService.updateAptTradeInfo(regionCode, startDate, endDate);
         return ResponseEntity.status(HttpStatus.OK).body(null);
-    }
+    }*/
 
-    @GetMapping("/apt")
+ /*   @GetMapping("/apt")
     public ResponseEntity<?> updateAptInfo(@RequestParam("addr") String addr){
-        CompletableFuture.supplyAsync(() -> {
+      CompletableFuture.supplyAsync(() -> {
             try {
-                jobTriggerService.updateAptInfoJob(new AptItemRequest(addr));
+                jobTriggerService.updateAptInfoJob(new BatchJobRequest(addr));
             } catch (JobExecutionException e) {
                 throw new RuntimeException(e);
             }
@@ -52,6 +47,6 @@ public class AptTradeController {
         });
 
         return ResponseEntity.ok("Batch Job 실행 완료");
-    }
+    }*/
 
 }

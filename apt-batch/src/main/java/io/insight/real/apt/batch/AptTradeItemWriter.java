@@ -1,10 +1,9 @@
 package io.insight.real.apt.batch;
 
-import io.insight.real.apt.dto.response.AptIdInfo;
-import io.insight.real.apt.dto.response.AptResponse;
-import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
-import io.insight.real.apt.repository.mapper.AptInfoMapper;
-import io.insight.real.apt.repository.r2dbc.AptInfoCustomRepository;
+import io.insight.real.apt.dto.response.ApartmentItem;
+import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
+import io.insight.real.apt.repository.mapper.AptTradeMapper;
+import io.insight.real.apt.repository.r2dbc.AptTradeRepository;
 import io.insight.real.apt.service.CommonWebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +21,11 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AptItemWriter implements ItemWriter<URI> {
+public class AptTradeItemWriter implements ItemWriter<URI> {
     private final CommonWebClientService webClientService;
-    private final AptInfoMapper aptInfoMapper;
-    private final AptInfoCustomRepository aptInfoCustomRepository;
+    private final ApiResponseUtil apiResponseUtil;
+    private final AptTradeRepository aptTradeRepository;
+    private final AptTradeMapper aptTradeMapper;
 
     @Override
     public void write(Chunk<? extends URI> chunk) throws Exception {
@@ -33,10 +33,9 @@ public class AptItemWriter implements ItemWriter<URI> {
         if (uris.isEmpty()) return;
         Flux.fromIterable(uris)
                 .delayElements(Duration.ofMillis(500))
-                .flatMap(url -> webClientService.executeRequest(url, AptResponse.class, BodyInserters.empty(), Flux::just))
-                .flatMap(response -> {
-                    return Flux.fromIterable(response.getData())
-                            .filter(dto -> "1".equals(dto.getComplexGbCd()))
+                .flatMap(url -> webClientService.executeXmlRequest(url, BodyInserters.empty(), apiResponseUtil::parseResponse))
+                .flatMap(apiResponse -> {
+                    return Flux.fromIterable(apiResponse.getBody().getItems())
                             .buffer(100)
                             .flatMap(this::saveBatchToDatabase);
                 })
@@ -46,13 +45,11 @@ public class AptItemWriter implements ItemWriter<URI> {
                 );
     }
 
-    private Mono<Void> saveBatchToDatabase(List<AptIdInfo> items) {
-        if (items.isEmpty()) {
-            log.warn("저장할 데이터가 없음!");
-            return Mono.empty();
-        }
-        List<AptInfo> entities = aptInfoMapper.toEntities(items);
-        return aptInfoCustomRepository.bulkUpsert(entities)
+    private Mono<Void> saveBatchToDatabase(List<ApartmentItem> items) {
+        List<AptTrade> entities = aptTradeMapper.toEntities(items);
+        return aptTradeRepository.saveAll(entities)
                 .then();
     }
+
+
 }

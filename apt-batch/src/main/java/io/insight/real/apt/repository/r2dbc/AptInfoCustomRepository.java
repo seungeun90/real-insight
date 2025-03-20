@@ -1,6 +1,6 @@
 package io.insight.real.apt.repository.r2dbc;
 
-import io.insight.real.apt.repository.entity.AptInfo;
+import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;

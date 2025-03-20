@@ -1,4 +1,4 @@
-package io.insight.real.apt.repository.entity;
+package io.insight.real.apt.repository.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
