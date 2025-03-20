@@ -167,9 +167,9 @@ function updateAptInfo() {
             adres: regionText
         })
     }).then(() => {
-        console.log(`${batchType} 배치 시작 완료`);
+        console.log(`배치 시작 완료`);
     }).catch(err => {
-        console.error(`${batchType} 배치 호출 실패`, err);
+        console.error(`배치 호출 실패`, err);
     });
 }
 
@@ -198,9 +198,9 @@ function startAptBatch() {
             endDate : formattedEndDate
         })
     }).then(() => {
-        console.log(`${batchType} 배치 시작 완료`);
+        console.log(`배치 시작 완료`);
     }).catch(err => {
-        console.error(`${batchType} 배치 호출 실패`, err);
+        console.error(`배치 호출 실패`, err);
     });
 
 }
