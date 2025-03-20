@@ -159,12 +159,17 @@ function updateAptInfo() {
     const selectedOption = regionSelect.options[regionSelect.selectedIndex];
     const regionText = selectedOption.text;
 
-    const params = new URLSearchParams({ addr: regionText });
-    const url = aptAddr + '/apt?' + params.toString();
-
-
-    fetchData(url, data => {
-       console.log("완료");
+    const url = `${aptAddr}/apt/batch`;
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            adres: regionText
+        })
+    }).then(() => {
+        console.log(`${batchType} 배치 시작 완료`);
+    }).catch(err => {
+        console.error(`${batchType} 배치 호출 실패`, err);
     });
 }
 
@@ -183,11 +188,19 @@ function startAptBatch() {
     const formattedStartDate = startDate.replace('-', '');
     const formattedEndDate = endDate.replace('-', '');
 
-    const url = `${aptAddr}/apt/trade?regionCode=${regionCode}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
-
+    const url = `${aptAddr}/apt/trade/batch`;
     fetch(url, {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            regionCode: regionCode,
+            startDate : formattedStartDate,
+            endDate : formattedEndDate
+        })
     }).then(() => {
-        alert('아파트 거래 정보 배치가 예약되었습니다.');
+        console.log(`${batchType} 배치 시작 완료`);
+    }).catch(err => {
+        console.error(`${batchType} 배치 호출 실패`, err);
     });
+
 }
