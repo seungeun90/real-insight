@@ -1,6 +1,7 @@
 package io.insight.real.apt.batch;
 
 import io.insight.real.apt.dto.response.ApartmentItem;
+import io.insight.real.apt.dto.response.ResponseBody;
 import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
 import io.insight.real.apt.repository.mapper.AptTradeMapper;
 import io.insight.real.apt.repository.r2dbc.AptTradeRepository;
@@ -16,7 +17,9 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,12 +35,15 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
         List<URI> uris = chunk.getItems().stream().map(uri->((URI)uri)).toList();
         if (uris.isEmpty()) return;
         Flux.fromIterable(uris)
-                .delayElements(Duration.ofMillis(500))
+                .delayElements(Duration.ofSeconds(1))
                 .flatMap(url -> webClientService.executeXmlRequest(url, BodyInserters.empty(), apiResponseUtil::parseResponse))
                 .flatMap(apiResponse -> {
-                    return Flux.fromIterable(apiResponse.getBody().getItems())
+                    return Flux.fromIterable(Optional.ofNullable(apiResponse.getBody())
+                                    .map(ResponseBody::getItems)
+                                    .orElse(Collections.emptyList()))
                             .buffer(100)
                             .flatMap(this::saveBatchToDatabase);
+
                 })
                 .subscribe(
                         success -> log.info("데이터 저장 완료"),
