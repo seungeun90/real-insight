@@ -22,20 +22,20 @@ public class AptItemBatchJobConfig {
     private final PlatformTransactionManager platformTransactionManager;
     private final AptItemReader aptItemReader;
     private final AptItemWriter aptItemWriter;
-    private final BatchJobStatusListener batchJobStatusListener;
+    //private final BatchJobStatusListener batchJobStatusListener;
 
     public AptItemBatchJobConfig(
         JobRepository jobRepository,
         @Qualifier("platformTransactionManager") PlatformTransactionManager transactionManager,
         AptItemReader aptItemReader,
-        AptItemWriter aptItemWriter,
-        BatchJobStatusListener batchJobStatusListener
+        AptItemWriter aptItemWriter
+       // BatchJobStatusListener batchJobStatusListener
     ){
         this.jobRepository = jobRepository;
         this.platformTransactionManager = transactionManager;
         this.aptItemReader = aptItemReader;
         this.aptItemWriter = aptItemWriter;
-        this.batchJobStatusListener = batchJobStatusListener;
+        //this.batchJobStatusListener = batchJobStatusListener;
     }
 
     @Bean(name = "updateAptInfoJob")
@@ -43,7 +43,7 @@ public class AptItemBatchJobConfig {
             @Qualifier("updateAptInfoStep") Step updateAptInfoStep) {
         return new JobBuilder("updateAptInfoJob", jobRepository)
                 .start(updateAptInfoStep)
-                .listener(batchJobStatusListener)
+             //   .listener(batchJobStatusListener)
                 .incrementer(new RunIdIncrementer())
                 .preventRestart()
                 .build();

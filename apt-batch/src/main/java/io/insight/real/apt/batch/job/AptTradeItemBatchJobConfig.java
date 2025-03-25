@@ -21,20 +21,20 @@ public class AptTradeItemBatchJobConfig {
     private final PlatformTransactionManager platformTransactionManager;
     private final AptTradeItemReader aptTradeItemReader;
     private final AptTradeItemWriter aptTradeItemWriter;
-    private final BatchJobStatusListener batchJobStatusListener;
+   // private final BatchJobStatusListener batchJobStatusListener;
 
     public AptTradeItemBatchJobConfig(
         JobRepository jobRepository,
         @Qualifier("platformTransactionManager") PlatformTransactionManager transactionManager,
         AptTradeItemReader aptTradeItemReader,
-        AptTradeItemWriter aptTradeItemWriter,
-        BatchJobStatusListener batchJobStatusListener
+        AptTradeItemWriter aptTradeItemWriter
+        //BatchJobStatusListener batchJobStatusListener
     ){
         this.jobRepository = jobRepository;
         this.platformTransactionManager = transactionManager;
         this.aptTradeItemReader = aptTradeItemReader;
         this.aptTradeItemWriter = aptTradeItemWriter;
-        this.batchJobStatusListener = batchJobStatusListener;
+        //this.batchJobStatusListener = batchJobStatusListener;
     }
 
     @Bean(name = "updateAptTradeJob")
@@ -42,7 +42,7 @@ public class AptTradeItemBatchJobConfig {
             @Qualifier("updateAptTradeStep") Step updateAptInfoStep) {
         return new JobBuilder("updateAptTradeJob", jobRepository)
                 .start(updateAptInfoStep)
-                .listener(batchJobStatusListener)
+          //      .listener(batchJobStatusListener)
                 .incrementer(new RunIdIncrementer())
                 .preventRestart()
                 .build();
