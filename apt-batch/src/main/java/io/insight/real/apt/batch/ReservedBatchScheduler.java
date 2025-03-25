@@ -34,6 +34,7 @@ public class ReservedBatchScheduler {
                 BatchJobRequest batchJobRequest = BatchJobRequest.builder()
                         .jobId(job.getId())
                         .regionCode(job.getRegionCode())
+                        .adres(job.getAddres())
                         .startDate(job.getStartDate())
                         .endDate(job.getEndDate())
                         .build();
