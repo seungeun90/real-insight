@@ -4,12 +4,13 @@ import io.insight.real.apt.repository.jpa.BatchJobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+@Service
 public class BatchJobStatusService {
 //implements JobExecutionListener {
 

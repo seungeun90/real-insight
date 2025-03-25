@@ -65,6 +65,7 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
                         success -> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
+                            log.info("Job id is {}", jobId);
                             if(jobId != null) {
                                 batchJobStatusService.saveStatus(jobId, "DONE");
                             }
@@ -73,6 +74,7 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
                         error -> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
+                            log.info("Job id is {}", jobId);
                             if(jobId != null) {
                                 batchJobStatusService.saveStatus(jobId, "FAILED");
                             }
