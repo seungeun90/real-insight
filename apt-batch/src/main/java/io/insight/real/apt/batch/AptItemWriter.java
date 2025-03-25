@@ -1,5 +1,6 @@
 package io.insight.real.apt.batch;
 
+import io.insight.real.apt.batch.job.BatchJobStatusService;
 import io.insight.real.apt.dto.response.AptIdInfo;
 import io.insight.real.apt.dto.response.AptResponse;
 import io.insight.real.apt.repository.jpa.BatchJobRepository;
@@ -30,7 +31,7 @@ public class AptItemWriter implements ItemWriter<URI> {
     private final CommonWebClientService webClientService;
     private final AptInfoMapper aptInfoMapper;
     private final AptInfoCustomRepository aptInfoCustomRepository;
-    private final BatchJobRepository batchJobRepository;
+    private final BatchJobStatusService batchJobStatusService;
     private StepExecution stepExecution;
 
     @BeforeStep
@@ -51,11 +52,11 @@ public class AptItemWriter implements ItemWriter<URI> {
                             .flatMap(this::saveBatchToDatabase);
                 })
                 .subscribe(
-                    success -> {
+                        success -> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
                             if(jobId != null) {
-                                saveStatus(jobId, "DONE");
+                                batchJobStatusService.saveStatus(jobId, "DONE");
                             }
                             log.info("데이터 저장 완료");
                         },
@@ -63,19 +64,14 @@ public class AptItemWriter implements ItemWriter<URI> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
                             if(jobId != null) {
-                                saveStatus(jobId, "FAILED");
+                                batchJobStatusService.saveStatus(jobId, "FAILED");
                             }
                             log.error(" 데이터 저장 중 오류 발생", error);
                         }
                 );
     }
 
-    private void saveStatus(Long jobId, String status) {
-        batchJobRepository.findById(jobId).ifPresent(batchJob -> {
-            batchJob.setStatus(status);
-            batchJobRepository.save(batchJob);
-        });
-    }
+
     private Mono<Void> saveBatchToDatabase(List<AptIdInfo> items) {
         if (items.isEmpty()) {
             log.warn("저장할 데이터가 없음!");

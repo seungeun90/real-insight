@@ -1,5 +1,6 @@
 package io.insight.real.apt.batch;
 
+import io.insight.real.apt.batch.job.BatchJobStatusService;
 import io.insight.real.apt.dto.response.ApartmentItem;
 import io.insight.real.apt.dto.response.ResponseBody;
 import io.insight.real.apt.repository.jpa.BatchJobRepository;
@@ -34,7 +35,7 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
     private final ApiResponseUtil apiResponseUtil;
     private final AptTradeRepository aptTradeRepository;
     private final AptTradeMapper aptTradeMapper;
-    private final BatchJobRepository batchJobRepository;
+    private final BatchJobStatusService batchJobStatusService;
     private StepExecution stepExecution;
 
     @BeforeStep
@@ -65,7 +66,7 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
                             if(jobId != null) {
-                                saveStatus(jobId, "DONE");
+                                batchJobStatusService.saveStatus(jobId, "DONE");
                             }
                             log.info("데이터 저장 완료");
                         },
@@ -73,24 +74,18 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
                             if(jobId != null) {
-                                saveStatus(jobId, "FAILED");
+                                batchJobStatusService.saveStatus(jobId, "FAILED");
                             }
                             log.error(" 데이터 저장 중 오류 발생", error);
                         }
                 );
     }
 
+
     private Mono<Void> saveBatchToDatabase(List<ApartmentItem> items) {
         List<AptTrade> entities = aptTradeMapper.toEntities(items);
         return aptTradeRepository.saveAll(entities)
                 .then();
-    }
-
-    private void saveStatus(Long jobId, String status) {
-        batchJobRepository.findById(jobId).ifPresent(batchJob -> {
-            batchJob.setStatus(status);
-            batchJobRepository.save(batchJob);
-        });
     }
 
 }
