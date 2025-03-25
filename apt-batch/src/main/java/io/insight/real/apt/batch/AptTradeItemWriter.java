@@ -62,23 +62,23 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
 
                 })
                 .subscribe(
-                        success -> {
-                            JobParameters params = stepExecution.getJobParameters();
-                            Long jobId = params.getLong("jobId");
-                            log.info("Job id is {}", jobId);
-                            if(jobId != null) {
-                                batchJobStatusService.saveStatus(jobId, "DONE");
-                            }
-                            log.info("데이터 저장 완료");
-                        },
+                        null,
                         error -> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
-                            log.info("Job id is {}", jobId);
                             if(jobId != null) {
                                 batchJobStatusService.saveStatus(jobId, "FAILED");
+                                log.error(" 데이터 저장 중 오류 발생", error);
                             }
-                            log.error(" 데이터 저장 중 오류 발생", error);
+                        },
+                        () -> {
+                            JobParameters params = stepExecution.getJobParameters();
+                            Long jobId = params.getLong("jobId");
+                            if(jobId != null) {
+                                batchJobStatusService.saveStatus(jobId, "DONE");
+                                log.info("데이터 저장 완료");
+                            }
+
                         }
                 );
     }
