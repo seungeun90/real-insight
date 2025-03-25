@@ -74,13 +74,13 @@ public class AptItemWriter implements ItemWriter<URI> {
     }
 
 
-    private Mono<Integer> saveBatchToDatabase(List<AptIdInfo> items) {
+    private Mono<Void> saveBatchToDatabase(List<AptIdInfo> items) {
         if (items.isEmpty()) {
             log.warn("저장할 데이터가 없음!");
             return Mono.empty();
         }
         List<AptInfo> entities = aptInfoMapper.toEntities(items);
         return aptInfoCustomRepository.bulkUpsert(entities)
-                .thenReturn(items.size());
+                .then();
     }
 }

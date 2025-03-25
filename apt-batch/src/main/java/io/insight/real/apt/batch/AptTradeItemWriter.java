@@ -84,11 +84,10 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
     }
 
 
-    private Mono<Integer> saveBatchToDatabase(List<ApartmentItem> items) {
+    private Mono<Void> saveBatchToDatabase(List<ApartmentItem> items) {
         List<AptTrade> entities = aptTradeMapper.toEntities(items);
         return aptTradeRepository.saveAll(entities)
-                .then()
-                .thenReturn(items.size());
+                .then();
     }
 
 }
