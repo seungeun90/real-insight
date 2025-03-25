@@ -2,7 +2,7 @@ package io.insight.real.apt.service.sample;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.insight.real.apt.dto.response.ApartmentItem;
-import io.insight.real.apt.dto.response.ApiResponse;
+import io.insight.real.apt.dto.response.XmlSuccessResponse;
 import io.insight.real.apt.dto.response.AptTradeProfit;
 import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
 import io.insight.real.apt.repository.jpa.AptTradeQueryRepository;
@@ -55,11 +55,11 @@ public class AptTradeInfoService {
 
     public Flux<Void> fetchAllPages(URI url) {
         return webClientService.executeXmlRequest(url, BodyInserters.empty(), this::parseResponse)
-                .flatMap(apiResponse -> {
-                    int totalCount = apiResponse.getBody().getTotalCount();
-                    int numOfRows = apiResponse.getBody().getNumOfRows();
+                .flatMap(xmlSuccessResponse -> {
+                    int totalCount = xmlSuccessResponse.getBody().getTotalCount();
+                    int numOfRows = xmlSuccessResponse.getBody().getNumOfRows();
                     int totalPages = (int) Math.ceil((double) totalCount / numOfRows);
-                    Flux<ApartmentItem> firstPageItems = Flux.fromIterable(apiResponse.getBody().getItems());
+                    Flux<ApartmentItem> firstPageItems = Flux.fromIterable(xmlSuccessResponse.getBody().getItems());
 
                     Flux<ApartmentItem> otherPagesItems = Flux.range(2, totalPages)
                             .flatMap(pageNo -> webClientService.executeXmlRequest(buildUrl(pageNo, url), BodyInserters.empty(), this::parseResponse))
@@ -79,10 +79,10 @@ public class AptTradeInfoService {
                 .then();
     }
 
-    private Flux<ApiResponse> parseResponse(String response) {
+    private Flux<XmlSuccessResponse> parseResponse(String response) {
         try {
-            ApiResponse apiResponse = xmlMapper.readValue(response, ApiResponse.class);
-            return Flux.just(apiResponse);
+            XmlSuccessResponse xmlSuccessResponse = xmlMapper.readValue(response, XmlSuccessResponse.class);
+            return Flux.just(xmlSuccessResponse);
         } catch (Exception e) {
             log.error("XML 파싱 오류", e);
             return Flux.empty();
