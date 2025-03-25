@@ -30,6 +30,7 @@ public class BatchReserveService {
                 .status("READY")
                 .regionCode(request.getRegionCode())
                 .startDate(request.getStartDate())
+                .addres(request.getAdres())
                 .endDate(request.getEndDate())
                 .updatedAt(LocalDateTime.now())
                 .scheduledAt(scheduledTime)

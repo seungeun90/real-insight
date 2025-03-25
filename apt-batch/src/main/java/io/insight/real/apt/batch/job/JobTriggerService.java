@@ -44,6 +44,7 @@ public class JobTriggerService {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("jobId", request.getJobId())
                 .addString("regionCode", request.getRegionCode())
+                .addString("adres", request.getAdres())
                 .addString("startDate", request.getStartDate())
                 .addString("endDate", request.getEndDate())
                 .addLong("timestamp", System.currentTimeMillis()) // 실행 시 중복 방지

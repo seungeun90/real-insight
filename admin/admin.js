@@ -175,7 +175,9 @@ function updateAptInfo() {
 
 
 function startAptBatch() {
-    const regionCode = document.getElementById('region').value;
+    const region = document.getElementById('region');
+    const address = region.options[region.selectedIndex].text;
+    const regionCode = region.value;
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
 
@@ -194,6 +196,7 @@ function startAptBatch() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             regionCode: regionCode,
+            adres: address,
             startDate : formattedStartDate,
             endDate : formattedEndDate
         })
