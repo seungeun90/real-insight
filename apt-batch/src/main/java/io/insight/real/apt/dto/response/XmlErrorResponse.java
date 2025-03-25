@@ -6,14 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@JacksonXmlRootElement(localName = "response")
-public class ApiResponse {
+@JacksonXmlRootElement(localName = "OpenAPI_ServiceResponse")
+public class XmlErrorResponse implements XmlResponse {
 
-    @JacksonXmlProperty(localName = "header")
-    private ResponseHeader header;
-
-    @JacksonXmlProperty(localName = "body")
-    private ResponseBody body;
-
-
-} 
+    @JacksonXmlProperty(localName = "cmmMsgHeader")
+    private ErrorHeader cmmMsgHeader;
+}
