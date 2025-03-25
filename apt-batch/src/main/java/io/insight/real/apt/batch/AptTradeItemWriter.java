@@ -61,15 +61,19 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
 
                 })
                 .subscribe(
-                        success -> log.info("데이터 저장 완료"),
+                        success -> {
+                            JobParameters params = stepExecution.getJobParameters();
+                            Long jobId = params.getLong("jobId");
+                            if(jobId != null) {
+                                saveStatus(jobId, "DONE");
+                            }
+                            log.info("데이터 저장 완료");
+                        },
                         error -> {
                             JobParameters params = stepExecution.getJobParameters();
                             Long jobId = params.getLong("jobId");
                             if(jobId != null) {
-                                batchJobRepository.findById(jobId).ifPresent(batchJob -> {
-                                    batchJob.setStatus("FAILED");
-                                    batchJobRepository.save(batchJob);
-                                });
+                                saveStatus(jobId, "FAILED");
                             }
                             log.error(" 데이터 저장 중 오류 발생", error);
                         }
@@ -80,8 +84,13 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
         List<AptTrade> entities = aptTradeMapper.toEntities(items);
         return aptTradeRepository.saveAll(entities)
                 .then();
-
     }
 
+    private void saveStatus(Long jobId, String status) {
+        batchJobRepository.findById(jobId).ifPresent(batchJob -> {
+            batchJob.setStatus(status);
+            batchJobRepository.save(batchJob);
+        });
+    }
 
 }
