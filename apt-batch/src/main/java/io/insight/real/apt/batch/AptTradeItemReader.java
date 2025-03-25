@@ -1,24 +1,15 @@
 package io.insight.real.apt.batch;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.insight.real.apt.config.ApiProperties;
-import io.insight.real.apt.dto.response.ApiResponse;
-import io.insight.real.apt.dto.response.AptResponse;
-import io.insight.real.apt.repository.jpa.AptTradeQueryRepository;
-import io.insight.real.apt.repository.mapper.AptTradeMapper;
-import io.insight.real.apt.repository.r2dbc.AptTradeRepository;
+import io.insight.real.apt.dto.response.XmlSuccessResponse;
 import io.insight.real.apt.service.CommonWebClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
-import reactor.core.publisher.Flux;
 
 import java.net.URI;
 import java.time.YearMonth;
@@ -86,7 +77,7 @@ public class AptTradeItemReader implements ItemReader<URI> {
 
             // totalPages를 아직 안 구했다면 첫 페이지 호출해서 계산
             if (totalPages == -1) {
-                ApiResponse response = webClientService.executeXmlRequest(
+                XmlSuccessResponse response = webClientService.executeXmlRequest(
                         buildUrl(1, regionCode, month),
                         BodyInserters.empty(),
                         apiResponseUtil::parseResponse
