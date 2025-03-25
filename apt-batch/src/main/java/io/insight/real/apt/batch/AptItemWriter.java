@@ -2,12 +2,16 @@ package io.insight.real.apt.batch;
 
 import io.insight.real.apt.dto.response.AptIdInfo;
 import io.insight.real.apt.dto.response.AptResponse;
+import io.insight.real.apt.repository.jpa.BatchJobRepository;
 import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
 import io.insight.real.apt.repository.mapper.AptInfoMapper;
 import io.insight.real.apt.repository.r2dbc.AptInfoCustomRepository;
 import io.insight.real.apt.service.CommonWebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Service;
@@ -26,7 +30,13 @@ public class AptItemWriter implements ItemWriter<URI> {
     private final CommonWebClientService webClientService;
     private final AptInfoMapper aptInfoMapper;
     private final AptInfoCustomRepository aptInfoCustomRepository;
+    private final BatchJobRepository batchJobRepository;
+    private StepExecution stepExecution;
 
+    @BeforeStep
+    public void beforeStep(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
+    }
     @Override
     public void write(Chunk<? extends URI> chunk) throws Exception {
         List<URI> uris = chunk.getItems().stream().map(uri->((URI)uri)).toList();
@@ -42,7 +52,17 @@ public class AptItemWriter implements ItemWriter<URI> {
                 })
                 .subscribe(
                         success -> log.info("데이터 저장 완료"),
-                        error -> log.error(" 데이터 저장 중 오류 발생", error)
+                        error -> {
+                            JobParameters params = stepExecution.getJobParameters();
+                            Long jobId = params.getLong("jobId");
+                            if(jobId != null) {
+                                batchJobRepository.findById(jobId).ifPresent(batchJob -> {
+                                    batchJob.setStatus("FAILED");
+                                    batchJobRepository.save(batchJob);
+                                });
+                            }
+                            log.error(" 데이터 저장 중 오류 발생", error);
+                        }
                 );
     }
 

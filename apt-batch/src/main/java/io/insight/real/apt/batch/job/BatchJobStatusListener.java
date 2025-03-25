@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+//@Component
 public class BatchJobStatusListener implements JobExecutionListener {
 
     private final BatchJobRepository batchJobRepository;
 
-    @Transactional
+  /*  @Transactional
     @Override
     public void afterJob(JobExecution jobExecution) {
         Long jobId = jobExecution.getJobParameters().getLong("jobId");
@@ -35,5 +35,5 @@ public class BatchJobStatusListener implements JobExecutionListener {
                 batchJobRepository.save(batchJob);
             });
         }
-    }
+    }*/
 }

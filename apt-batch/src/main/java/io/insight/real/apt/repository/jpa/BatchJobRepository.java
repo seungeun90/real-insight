@@ -14,6 +14,6 @@ public interface BatchJobRepository extends JpaRepository<BatchJobQueueJpa, Long
     @Query("SELECT COUNT(b) FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'IN_PROGRESS') AND b.scheduledAt <= :now")
     int countActiveJobs(@Param("now") LocalDateTime now);
 
-    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status = 'READY' AND b.scheduledAt <= :now")
+    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now")
     List<BatchJobQueueJpa> findReadyJobs(@Param("now") LocalDateTime now);
 }

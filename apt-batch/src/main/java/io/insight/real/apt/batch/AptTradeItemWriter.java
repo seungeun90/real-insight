@@ -2,18 +2,23 @@ package io.insight.real.apt.batch;
 
 import io.insight.real.apt.dto.response.ApartmentItem;
 import io.insight.real.apt.dto.response.ResponseBody;
+import io.insight.real.apt.repository.jpa.BatchJobRepository;
 import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
 import io.insight.real.apt.repository.mapper.AptTradeMapper;
 import io.insight.real.apt.repository.r2dbc.AptTradeRepository;
 import io.insight.real.apt.service.CommonWebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 import java.net.URI;
 import java.time.Duration;
@@ -29,6 +34,13 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
     private final ApiResponseUtil apiResponseUtil;
     private final AptTradeRepository aptTradeRepository;
     private final AptTradeMapper aptTradeMapper;
+    private final BatchJobRepository batchJobRepository;
+    private StepExecution stepExecution;
+
+    @BeforeStep
+    public void beforeStep(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
+    }
 
     @Override
     public void write(Chunk<? extends URI> chunk) throws Exception {
@@ -36,7 +48,10 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
         if (uris.isEmpty()) return;
         Flux.fromIterable(uris)
                 .delayElements(Duration.ofSeconds(1))
-                .flatMap(url -> webClientService.executeXmlRequest(url, BodyInserters.empty(), apiResponseUtil::parseResponse))
+                .flatMap(url -> webClientService.executeXmlRequest(url, BodyInserters.empty(), apiResponseUtil::parseResponse)
+                        .retryWhen(
+                                Retry.fixedDelay(3, Duration.ofSeconds(2))
+                        ))
                 .flatMap(apiResponse -> {
                     return Flux.fromIterable(Optional.ofNullable(apiResponse.getBody())
                                     .map(ResponseBody::getItems)
@@ -47,7 +62,17 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
                 })
                 .subscribe(
                         success -> log.info("데이터 저장 완료"),
-                        error -> log.error(" 데이터 저장 중 오류 발생", error)
+                        error -> {
+                            JobParameters params = stepExecution.getJobParameters();
+                            Long jobId = params.getLong("jobId");
+                            if(jobId != null) {
+                                batchJobRepository.findById(jobId).ifPresent(batchJob -> {
+                                    batchJob.setStatus("FAILED");
+                                    batchJobRepository.save(batchJob);
+                                });
+                            }
+                            log.error(" 데이터 저장 중 오류 발생", error);
+                        }
                 );
     }
 
@@ -55,6 +80,7 @@ public class AptTradeItemWriter implements ItemWriter<URI> {
         List<AptTrade> entities = aptTradeMapper.toEntities(items);
         return aptTradeRepository.saveAll(entities)
                 .then();
+
     }
 
 
