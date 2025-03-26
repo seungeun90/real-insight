@@ -18,6 +18,7 @@ public class BatchReserveService {
 
     private final BatchJobRepository batchJobRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final AptInfoService aptInfoService;
 
     @Transactional
     public void enqueueAptTradeJob(BatchJobRequest request) {
@@ -40,7 +41,8 @@ public class BatchReserveService {
         request.setJobId(saved.getId());
         request.setJobName(JobName.APT_TRADE_JOB.name());
         if (scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
-            eventPublisher.publishEvent(request);
+
+           // eventPublisher.publishEvent(request);
         }
     }
 
@@ -63,7 +65,8 @@ public class BatchReserveService {
         request.setJobName(JobName.APT_INFO_JOB.name());
 
         if (scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
-            eventPublisher.publishEvent(request);
+            aptInfoService.triggerJob(request.getAdres(), saved.getId());
+            //eventPublisher.publishEvent(request);
         }
     }
 }
