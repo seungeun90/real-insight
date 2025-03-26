@@ -7,8 +7,5 @@ USER root
 # 3. 현재 디렉토리의 파일을 Nginx의 HTML 디렉토리로 복사
 COPY . /usr/share/nginx/html
 
-# 기본 Nginx 설정 파일을 덮어쓰거나 추가할 경우
-COPY nginx.conf /etc/nginx/nginx.conf
-
 # 4. Nginx 실행
 CMD ["nginx", "-g", "daemon off;"]
