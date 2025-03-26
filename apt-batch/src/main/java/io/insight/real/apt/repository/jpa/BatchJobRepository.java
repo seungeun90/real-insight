@@ -18,6 +18,9 @@ public interface BatchJobRepository extends JpaRepository<BatchJobQueueJpa, Long
     @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now")
     List<BatchJobQueueJpa> findTop5Jobs(@Param("now") LocalDateTime now, Pageable pageable);
 
+    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now AND b.jobName='APT_INFO_JOB'")
+    List<BatchJobQueueJpa> findTop5JobsTemp(@Param("now") LocalDateTime now, Pageable pageable);
+
     @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now")
     List<BatchJobQueueJpa> findReadyJobs(@Param("now") LocalDateTime now);
 }
