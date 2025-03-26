@@ -52,9 +52,9 @@ public class ReservedBatchScheduler {
 
                 //jobTriggerService.updateAptTradeJob(batchJobRequest);
 
-                log.info("예약 배치 실행 완료: {}", job.getId());
+                log.info("예약 배치 실행 완료: {}, {}, {}", job.getId(), job.getJobName(), job.getAddres());
             } catch (Exception e) {
-                log.error(" 예약 배치 실행 실패: {}", job.getId(), e);
+                log.error(" 예약 배치 실행 실패:{}, {}, {}", job.getId(), job.getJobName(), job.getAddres(), e);
             }
         }
     }
