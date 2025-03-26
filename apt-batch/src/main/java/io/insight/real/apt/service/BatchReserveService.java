@@ -18,7 +18,7 @@ public class BatchReserveService {
 
     private final BatchJobRepository batchJobRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final AptInfoService aptInfoService;
+    private final AptInfoJobService aptInfoService;
 
     @Transactional
     public void enqueueAptTradeJob(BatchJobRequest request) {

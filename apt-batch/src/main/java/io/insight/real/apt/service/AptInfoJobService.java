@@ -10,6 +10,7 @@ import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,8 +23,8 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
-public class AptInfoService {
+@Service
+public class AptInfoJobService {
     private final CommonWebClientService webClientService;
     private final ApiProperties apiProperties;
     private final AptInfoCustomRepository aptInfoCustomRepository;
