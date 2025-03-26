@@ -56,7 +56,7 @@ public class AptTradeJobService {
         monthList = getMonthList(startDate, endDate);
 
         Flux.fromIterable(monthList)
-            .delayElements(Duration.ofMillis(500))
+            .delayElements(Duration.ofSeconds(1))
             .flatMap(month -> {
                 // 페이지 수 조회 + runAptJob 수행
                 return webClientService.executeXmlRequest(
@@ -121,7 +121,7 @@ public class AptTradeJobService {
     }
     public Mono<Void> runAptJob(String regionCode, String month, String adres, Long jobId, int totalPages) {
         return Flux.range(1, totalPages)
-                .delayElements(Duration.ofMillis(500))
+                .delayElements(Duration.ofSeconds(1))
                 .flatMap(pageNo -> {
                     URI url = buildUrl(pageNo, regionCode, month);
                     return webClientService.executeXmlRequest(url, BodyInserters.empty(), apiResponseUtil::parseResponse)
