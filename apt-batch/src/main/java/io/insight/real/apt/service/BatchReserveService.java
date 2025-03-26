@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @RequiredArgsConstructor
 @Service
@@ -23,8 +24,11 @@ public class BatchReserveService {
 
     @Transactional
     public void enqueueAptTradeJob(BatchJobRequest request) {
-        int activeJobCount = batchJobRepository.countActiveJobs(LocalDateTime.now());
-        LocalDateTime scheduledTime = SlotDelayCalculator.calculateScheduledTime(activeJobCount);
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        int activeJobCount = batchJobRepository.countActiveJobs(now);
+        LocalDateTime scheduledTime = SlotDelayCalculator.calculateScheduledTime(activeJobCount)
+                .truncatedTo(ChronoUnit.MINUTES);
+
 
         // DB에 배치 Job 등록
         BatchJobQueueJpa entity = BatchJobQueueJpa.builder()
