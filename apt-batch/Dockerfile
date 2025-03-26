@@ -11,4 +11,4 @@ COPY ${JAR_FILE_PATH} app.jar
 EXPOSE 8086
 
 # 애플리케이션 실행 시 -javaagent 옵션 추가
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-Duser.timezone=Asia/Seoul", "-jar", "app.jar"]

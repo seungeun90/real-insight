@@ -26,7 +26,6 @@ public class ApiResponseUtil {
             throw new RuntimeException(errorResponse.getCmmMsgHeader().getErrMsg());
 
         } catch (Exception e) {
-            log.error("XML 파싱 오류", e);
             throw new RuntimeException(e.getMessage());
         }
     }
