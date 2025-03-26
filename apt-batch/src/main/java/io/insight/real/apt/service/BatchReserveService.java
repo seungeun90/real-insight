@@ -45,7 +45,7 @@ public class BatchReserveService {
         BatchJobQueueJpa saved = batchJobRepository.save(entity);
         request.setJobId(saved.getId());
         request.setJobName(JobName.APT_TRADE_JOB.name());
-        if (scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
+        if (activeJobCount < 5 && scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
             aptTradeJobService.triggerJob(request);
            // eventPublisher.publishEvent(request);
         }
@@ -69,7 +69,7 @@ public class BatchReserveService {
         request.setJobId(saved.getId());
         request.setJobName(JobName.APT_INFO_JOB.name());
 
-        if (scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
+        if (activeJobCount < 5 && scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
             aptInfoService.triggerJob(request.getAdres(), saved.getId());
             //eventPublisher.publishEvent(request);
         }

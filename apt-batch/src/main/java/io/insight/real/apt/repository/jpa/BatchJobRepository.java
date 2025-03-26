@@ -1,6 +1,7 @@
 package io.insight.real.apt.repository.jpa;
 
 import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,9 @@ import java.util.List;
 public interface BatchJobRepository extends JpaRepository<BatchJobQueueJpa, Long> {
     @Query("SELECT COUNT(b) FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'IN_PROGRESS') AND b.scheduledAt <= :now")
     int countActiveJobs(@Param("now") LocalDateTime now);
+
+    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now")
+    List<BatchJobQueueJpa> findTop5Jobs(@Param("now") LocalDateTime now, Pageable pageable);
 
     @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now")
     List<BatchJobQueueJpa> findReadyJobs(@Param("now") LocalDateTime now);
