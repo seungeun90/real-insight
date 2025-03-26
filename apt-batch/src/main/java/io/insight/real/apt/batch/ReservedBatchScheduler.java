@@ -2,8 +2,11 @@ package io.insight.real.apt.batch;
 
 import io.insight.real.apt.batch.job.JobTriggerService;
 import io.insight.real.apt.dto.BatchJobRequest;
+import io.insight.real.apt.dto.JobName;
 import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
 import io.insight.real.apt.repository.jpa.BatchJobRepository;
+import io.insight.real.apt.service.AptInfoJobService;
+import io.insight.real.apt.service.AptTradeJobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +21,8 @@ import java.util.List;
 public class ReservedBatchScheduler {
     private final BatchJobRepository batchJobRepository;
     private final JobTriggerService jobTriggerService;
+    private final AptInfoJobService aptInfoService;
+    private final AptTradeJobService aptTradeJobService;
 
     @Scheduled(cron = "0 */10 * * * *") // 매 10분마다
     public void triggerReservedJobs() {
@@ -31,14 +36,21 @@ public class ReservedBatchScheduler {
                 job.setStatus("IN_PROGRESS");
                 batchJobRepository.save(job);
 
-                BatchJobRequest batchJobRequest = BatchJobRequest.builder()
-                        .jobId(job.getId())
-                        .regionCode(job.getRegionCode())
-                        .adres(job.getAddres())
-                        .startDate(job.getStartDate())
-                        .endDate(job.getEndDate())
-                        .build();
-                jobTriggerService.updateAptTradeJob(batchJobRequest);
+                if(JobName.APT_TRADE_JOB.name().equals(job.getJobName())) {
+                    BatchJobRequest batchJobRequest = BatchJobRequest.builder()
+                            .jobId(job.getId())
+                            .regionCode(job.getRegionCode())
+                            .adres(job.getAddres())
+                            .startDate(job.getStartDate())
+                            .endDate(job.getEndDate())
+                            .build();
+                    aptTradeJobService.triggerJob(batchJobRequest);
+                }
+                if(JobName.APT_INFO_JOB.name().equals(job.getJobName())) {
+                    aptInfoService.triggerJob(job.getAddres(), job.getId());
+                }
+
+                //jobTriggerService.updateAptTradeJob(batchJobRequest);
 
                 log.info("예약 배치 실행 완료: {}", job.getId());
             } catch (Exception e) {
