@@ -17,9 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class CityBasicInfo {
     @Id
     private Long id; // 기본 키
-
     private String admCd; // 시도 코드
-
     private String provinceCode; // 시도 코드
 
     private String cityCode;

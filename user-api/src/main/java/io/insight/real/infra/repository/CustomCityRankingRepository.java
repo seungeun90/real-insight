@@ -107,7 +107,9 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
 
         List<String> admCdList = new ArrayList<>(cityCodes.keySet());
 
-        query.fields().include("totalPopulation")
+        query.fields().include("totalPopulation") //인구 수
+                .include("householdCount") //가구 수
+                .include("averageHouseholdSize")// 평균 가구원 수
                 .include("provinceCode")
                 .include("cityCode")
                 .include("admCd");
