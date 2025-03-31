@@ -61,8 +61,7 @@ public class CommonWebClientService {
                 //  .retry(1)
                 .onErrorResume(error -> {
                     log.error("API 호출 중 오류 발생", error);
-                    //log.error("{}", error.getMessage());
-                    return Mono.empty(); // ✅ 에러 발생 시 Flux가 멈추지 않고 계속 진행
+                    return Mono.empty(); // 에러 발생 시 Flux가 멈추지 않고 계속 진행
                 })
                 .flatMapMany(function);
     }
