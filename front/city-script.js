@@ -4,6 +4,7 @@ let workData = [];
 let ageChart;
 let workChart;
 let cityPopChart;
+let cityPopInCityChart;
 let locationData ;
 let aptLocationCode;
 const years  = [2023,2022];
@@ -229,6 +230,7 @@ function fetchPopInProvince(provinceCode,year){
     let url = userAddr + `/cities/pop?provinceCode=${provinceCode}&year=${year}`;
     fetchData(url, data =>{
         createPopChart(data);
+        createPopInCityChart(data);
     });
 }
 function createPopChart(data){
@@ -270,34 +272,6 @@ function createPopChart(data){
             }
         }
     ];
-
-    /*var options = {
-        responsive: true,
-        scales: {
-            y: {
-                ticks: {
-                    callback: function(value) {
-                        return value.toLocaleString(); // 천 단위 콤마 추가
-                    }
-                }
-            }
-        },
-        scales: {
-            x: { stacked: true },
-            y: {
-                stacked: true,
-                type: "logarithmic", // 로그 스케일 적용
-                min: 10000,  // 최소값 설정
-                max: 1000000, // 최대값 설정
-                ticks: {
-                    callback: function(value) {
-                        const values = [30000, 100000, 300000, 500000, 700000, 900000];
-                        return values.includes(value) ? value.toLocaleString() : ""; // 특정 값만 표시
-                    }
-                }
-            }
-        }
-    };*/
 
     const tooltipConfig = {
         getValue: (dataset, index) => dataset.data[index] ? Number(dataset.data[index]).toLocaleString() : "-"
@@ -357,8 +331,103 @@ function createPopChart(data){
         { labels, datasets },
         options
     );
-
 }
+function createPopInCityChart(data){
+    if (!data || data.length <= 0) return;
+    const ctx = document.getElementById("populationInCityChart").getContext("2d");
+    if (cityPopInCityChart) {
+        cityPopInCityChart.destroy();
+    }
+    const labels = data.map(entry => entry.townName);
+
+    const datasets = [
+        {
+            label: "인구 수",
+            data: data.map(entry => parseInt(entry.totalPopulation, 10)),
+            backgroundColor: "rgba(54, 162, 235, 0.7)",
+            yAxisID: "yPopulation"
+        },
+        {
+            label: "가구 수",
+            data: data.map(entry => parseInt(entry.householdCount || 0)),
+            backgroundColor: "rgba(255, 99, 132, 0.7)",
+            yAxisID: "yHousehold"
+        },
+        {
+            label: "평균 가구원 수",
+            data: data.map(entry => parseInt(entry.averageHouseholdSize || 0)),
+            type: "line",
+            borderColor: "rgba(255, 206, 86, 1)",
+            backgroundColor: "rgba(255, 206, 86, 0.3)",
+            borderWidth: 2,
+            pointBackgroundColor: "rgba(255, 206, 86, 1)",
+            fill: false,
+            yAxisID: "yHidden",
+            datalabels: {
+                anchor: "end",
+                align: "top",
+                formatter: value => `${value}`,
+                color: "#000"
+            }
+        }
+    ];
+
+    const options = {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: context => {
+                        const value = context.raw || 0;
+                        return `${context.dataset.label}: ${Number(value).toLocaleString()}`;
+                    }
+                }
+            },
+            legend: {
+                position: "top"
+            }
+        },
+        scales: {
+            yPopulation: {
+                type: "linear",
+                position: "left",
+                title: {
+                    display: true,
+                    text: "인구 수"
+                },
+                ticks: {
+                    callback: value => Number(value).toLocaleString()
+                }
+            },
+            yHousehold: {
+                type: "linear",
+                position: "right",
+                title: {
+                    display: true,
+                    text: "가구 수"
+                },
+                grid: { drawOnChartArea: false },
+                ticks: {
+                    callback: value => Number(value).toLocaleString()
+                }
+            },
+            yHidden: {
+                display: false, //  축 숨김!
+                min: 0,
+                max: 5
+            }
+        }
+    };
+
+    cityPopInCityChart = createChart(
+        cityPopInCityChart,
+        "cityPopInCityChart",
+        "bar",
+        { labels, datasets },
+        options
+    );
+}
+
 function createWorkChart(data){
     if (!data || data.length <= 0) return;
 
