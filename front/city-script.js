@@ -256,7 +256,7 @@ function createPopChart(data){
         },
         {
             label: "평균 가구원 수",
-            data: data.map(entry => parseInt(entry.averageHouseholdSize || 0)),
+            data: data.map(entry => entry.averageHouseholdSize || 0),
             type: "line",
             borderColor: "rgba(255, 206, 86, 1)",
             backgroundColor: "rgba(255, 206, 86, 0.3)",
@@ -356,7 +356,7 @@ function createPopInCityChart(){
         },
         {
             label: "평균 가구원 수",
-            data: data.map(entry => parseInt(entry.averageHouseholdSize || 0)),
+            data: data.map(entry => entry.averageHouseholdSize || 0),
             type: "line",
             borderColor: "rgba(255, 206, 86, 1)",
             backgroundColor: "rgba(255, 206, 86, 0.3)",
