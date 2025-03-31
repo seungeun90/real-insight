@@ -122,14 +122,18 @@ function loadYears() {
 //데이터 조회 
 
 function loadData() {
-   let provinceCode = document.getElementById("province").value;
-   let cityCode = document.getElementById("city").value;
+    let provinceCode = document.getElementById("province").value;
+    let cityCode = document.getElementById("city").value;
   // let year = document.getElementById("year").value;
+    let selectedNm = provinceSelect.options[provinceSelect.selectedIndex].text;
+    document.querySelectorAll('span[name="selectedProvince"]').forEach(el => {
+        el.textContent = selectedNm;
+    });
 
-   if (!provinceCode || !cityCode ) {
+    if (!provinceCode || !cityCode ) {
        alert("모든 필드를 선택해주세요.");
        return;
-   }
+    }
     // 현재 활성화된 탭 확인
     let activeTab = document.querySelector(".nav-link.active").getAttribute("data-tab");
 
