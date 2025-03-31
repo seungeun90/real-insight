@@ -159,7 +159,7 @@ function updateAptInfo() {
     const selectedOption = regionSelect.options[regionSelect.selectedIndex];
     const regionText = selectedOption.text;
 
-    const url = `${aptAddr}/apt/batch`;
+    const url = `${aptAddr}/schedules/apt`;
     fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -190,7 +190,7 @@ function startAptBatch() {
     const formattedStartDate = startDate.replace('-', '');
     const formattedEndDate = endDate.replace('-', '');
 
-    const url = `${aptAddr}/apt/trade/batch`;
+    const url = `${aptAddr}/schedules/apt-trade`;
     fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
