@@ -157,6 +157,7 @@ function fetchCityPopulation(provinceCode,cityCode){
     fetchData(url,data => {
         popRankingData = data.popRankingData;
         cityPopulation = data.cityPopulation;
+        createPopInCityChart(cityPopulation);
         createAgeChart();
         populateTop5Table();
         populateRankingTable();
@@ -230,7 +231,6 @@ function fetchPopInProvince(provinceCode,year){
     let url = userAddr + `/cities/pop?provinceCode=${provinceCode}&year=${year}`;
     fetchData(url, data =>{
         createPopChart(data);
-        createPopInCityChart(data);
     });
 }
 function createPopChart(data){
