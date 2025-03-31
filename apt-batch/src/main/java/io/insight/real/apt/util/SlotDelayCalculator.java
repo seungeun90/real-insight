@@ -1,4 +1,4 @@
-package io.insight.real.apt.service;
+package io.insight.real.apt.util;
 
 import java.time.LocalDateTime;
 

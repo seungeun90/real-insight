@@ -1,9 +1,12 @@
-package io.insight.real.apt.service;
+package io.insight.real.apt.controller;
 
 import io.insight.real.apt.dto.BatchJobRequest;
 import io.insight.real.apt.dto.JobName;
+import io.insight.real.apt.dto.JobStatus;
 import io.insight.real.apt.repository.jpa.BatchJobRepository;
 import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
+import io.insight.real.apt.service.AptInfoJobService;
+import io.insight.real.apt.service.AptTradeJobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +33,7 @@ public class ReservedBatchScheduler {
         for (BatchJobQueueJpa job : readyJobs) {
             try {
                 // 실행 전 상태 업데이트
-                job.setStatus("IN_PROGRESS");
+                job.setStatus(JobStatus.IN_PROGRESS.name());
                 batchJobRepository.save(job);
 
                 if(JobName.APT_TRADE_JOB.name().equals(job.getJobName())) {

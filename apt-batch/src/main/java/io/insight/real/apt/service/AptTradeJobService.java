@@ -1,5 +1,6 @@
 package io.insight.real.apt.service;
 
+import io.insight.real.apt.dto.JobStatus;
 import io.insight.real.apt.util.ApiResponseUtil;
 import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.BatchJobRequest;
@@ -74,46 +75,16 @@ public class AptTradeJobService {
             .subscribe(
                     null,
                     error -> {
-                        batchJobStatusService.saveStatus(request.getJobId(), "FAILED");
+                        batchJobStatusService.saveStatus(request.getJobId(), JobStatus.FAILED.name());
                         log.error("{}지역 아파트거래 작업 실패: {}", adres, error.getMessage(), error);
                     },
                     () -> {
-                        batchJobStatusService.saveStatus(request.getJobId(), "DONE");
+                        batchJobStatusService.saveStatus(request.getJobId(), JobStatus.DONE.name());
                         log.info("{}지역 아파트거래 작업 완료", adres);
                     }
             );
-        /*for (String month : monthList) {
-            Integer curPage = MONTH_PAGING.get(month);
-            Integer totalPages = TOTAL_PAGES.getOrDefault(month, -1);
-            if (totalPages == -1) {
-                XmlSuccessResponse response = webClientService.executeXmlRequest(
-                        buildUrl(1, regionCode, month),
-                        BodyInserters.empty(),
-                        apiResponseUtil::parseResponse
-                ).blockFirst();
-
-                if (response == null) {
-                    // 데이터가 없으면 이 month는 스킵하고 다음 month로
-                    MONTH_PAGING.put(month, -1);
-                    continue;
-                }
-
-                int totalCount = response.getBody().getTotalCount();
-                int numOfRows = response.getBody().getNumOfRows();
-                totalPages = (int) Math.ceil((double) totalCount / numOfRows);
-
-                TOTAL_PAGES.put(month, totalPages);
-            }
-
-            // 현재 month의 페이지가 totalPages를 넘으면 다음 month로
-            if (curPage >= totalPages) {
-                continue;
-            }
-            runAptJob(regionCode, month, adres, jobId);
-            MONTH_PAGING.put(month, curPage + 1);
-        }*/
     }
-    public Mono<Void> runAptJob(String regionCode, String month, String adres, Long jobId, int totalPages) {
+    private Mono<Void> runAptJob(String regionCode, String month, String adres, Long jobId, int totalPages) {
         return Flux.range(1, totalPages)
                 .delayElements(Duration.ofSeconds(1))
                 .flatMap(pageNo -> {
@@ -129,52 +100,6 @@ public class AptTradeJobService {
                             .flatMap(this::saveBatchToDatabase);
                 })
                 .then(); // 작업 완료 후 signal만 반환
-    }
-
-    public void runAptJob(String regionCode, String month, String adres, Long jobId) {
-        generatePagedUris(regionCode, month)
-                .delayElements(Duration.ofSeconds(1))
-                .flatMap(url -> webClientService.executeXmlRequest(url, BodyInserters.empty(), apiResponseUtil::parseResponse)
-                        .retryWhen(
-                                Retry.fixedDelay(3, Duration.ofSeconds(2))
-                        ))
-                .flatMap(apiResponse -> {
-                    return Flux.fromIterable(Optional.ofNullable(apiResponse.getBody())
-                                    .map(ResponseBody::getItems)
-                                    .orElse(Collections.emptyList()))
-                            .buffer(100)
-                            .flatMap(this::saveBatchToDatabase);
-
-                })
-                .then()
-                .subscribe(
-                        null,
-                        error -> {
-                            batchJobStatusService.saveStatus(jobId, "FAILED");
-                            log.error("{}지역 아파트 정보 작업 실패: {}",adres, error.getMessage(), error);
-                        },
-                        () -> {
-                            batchJobStatusService.saveStatus(jobId, "DONE");
-                            log.info("{}지역 아파트 정보 작업 완료",adres);
-                        }
-                );
-    }
-    public Flux<URI> generatePagedUris(String regionCode, String month) {
-        return webClientService.executeXmlRequest(
-                        buildUrl(1, regionCode, month),
-                        BodyInserters.empty(),
-                        apiResponseUtil::parseResponse
-                )
-                .flatMap(response -> {
-                    int totalCount = response.getBody().getTotalCount();
-                    int numOfRows = response.getBody().getNumOfRows();
-                    int totalPages = (int) Math.ceil((double) totalCount / numOfRows);
-
-                    log.info("총 페이지 수: {}", totalPages);
-
-                    return Flux.range(0, totalPages)
-                            .map(page -> buildUrl(page, regionCode, month));
-                });
     }
 
     private Mono<Void> saveBatchToDatabase(List<ApartmentItem> items) {
@@ -195,7 +120,7 @@ public class AptTradeJobService {
                 + "&numOfRows="+numOfRows);
         return uri;
     }
-    public static List<String> getMonthList(String startDate, String endDate) {
+    private static List<String> getMonthList(String startDate, String endDate) {
         // startDate와 endDate를 YearMonth 형식으로 변환
         YearMonth start = parseYearMonth(startDate);
         YearMonth end = parseYearMonth(endDate);

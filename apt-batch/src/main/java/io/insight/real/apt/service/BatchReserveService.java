@@ -3,10 +3,11 @@ package io.insight.real.apt.service;
 
 import io.insight.real.apt.dto.BatchJobRequest;
 import io.insight.real.apt.dto.JobName;
-import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
+import io.insight.real.apt.dto.JobStatus;
 import io.insight.real.apt.repository.jpa.BatchJobRepository;
+import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
+import io.insight.real.apt.util.SlotDelayCalculator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,6 @@ import java.time.temporal.ChronoUnit;
 public class BatchReserveService {
 
     private final BatchJobRepository batchJobRepository;
-    private final ApplicationEventPublisher eventPublisher;
     private final AptInfoJobService aptInfoService;
     private final AptTradeJobService aptTradeJobService;
 
@@ -33,7 +33,7 @@ public class BatchReserveService {
         // DB에 배치 Job 등록
         BatchJobQueueJpa entity = BatchJobQueueJpa.builder()
                 .jobName(JobName.APT_TRADE_JOB.name())
-                .status("READY")
+                .status(JobStatus.READY.name())
                 .regionCode(request.getRegionCode())
                 .startDate(request.getStartDate())
                 .addres(request.getAdres())
@@ -47,7 +47,6 @@ public class BatchReserveService {
         request.setJobName(JobName.APT_TRADE_JOB.name());
         if (activeJobCount < 5 && scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
             aptTradeJobService.triggerJob(request);
-           // eventPublisher.publishEvent(request);
         }
     }
 
@@ -59,7 +58,7 @@ public class BatchReserveService {
         // DB에 배치 Job 등록
         BatchJobQueueJpa entity = BatchJobQueueJpa.builder()
                 .jobName(JobName.APT_INFO_JOB.name())
-                .status("READY")
+                .status(JobStatus.READY.name())
                 .addres(request.getAdres())
                 .updatedAt(LocalDateTime.now())
                 .scheduledAt(scheduledTime)
@@ -71,7 +70,6 @@ public class BatchReserveService {
 
         if (activeJobCount < 5 && scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
             aptInfoService.triggerJob(request.getAdres(), saved.getId());
-            //eventPublisher.publishEvent(request);
         }
     }
 }

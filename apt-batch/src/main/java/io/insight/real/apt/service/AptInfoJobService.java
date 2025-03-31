@@ -1,6 +1,7 @@
 package io.insight.real.apt.service;
 
 import io.insight.real.apt.config.ApiProperties;
+import io.insight.real.apt.dto.JobStatus;
 import io.insight.real.apt.dto.response.AptIdInfo;
 import io.insight.real.apt.dto.response.AptResponse;
 import io.insight.real.apt.repository.mapper.AptInfoMapper;
@@ -33,7 +34,7 @@ public class AptInfoJobService {
         runAptJob(address, jobId);
     }
 
-    public void runAptJob(String adres, Long jobId) {
+    private void runAptJob(String adres, Long jobId) {
         generatePagedUris(adres)
                 .delayElements(Duration.ofMillis(500)) // 과도한 요청 방지
                 .flatMap(uri -> webClientService.executeRequest(uri, AptResponse.class, BodyInserters.empty(), Flux::just))
@@ -46,16 +47,16 @@ public class AptInfoJobService {
                 .subscribe(
                         null,
                         error -> {
-                            batchJobStatusService.saveStatus(jobId, "FAILED");
+                            batchJobStatusService.saveStatus(jobId, JobStatus.FAILED.name());
                             log.error("{}지역 아파트 정보 작업 실패: {}",adres, error.getMessage(), error);
                         },
                         () -> {
-                            batchJobStatusService.saveStatus(jobId, "DONE");
+                            batchJobStatusService.saveStatus(jobId, JobStatus.DONE.name());
                             log.info("{}지역 아파트 정보 작업 완료",adres);
                         }
                 );
     }
-    public Flux<URI> generatePagedUris(String adres) {
+    private Flux<URI> generatePagedUris(String adres) {
         return webClientService.executeRequest(buildUrl(0, adres), AptResponse.class, BodyInserters.empty(), Mono::just)
                 .flatMap(firstResponse -> {
                     int matchCount = firstResponse.getMatchCount();

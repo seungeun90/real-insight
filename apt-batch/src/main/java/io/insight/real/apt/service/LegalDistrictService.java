@@ -43,7 +43,6 @@ public class LegalDistrictService {
                 String[] fields = line.split("\t");
 
                 if (fields.length < 3) continue;  // 데이터 형식이 올바르지 않으면 건너뛴다.
-                //코드
                 String districtCode = fields[0].trim();
                 String regionCode = districtCode.length() >= 5 ? districtCode.substring(0, 5) : null;
                 String name = fields[1].trim();
