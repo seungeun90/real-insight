@@ -198,10 +198,12 @@ function renderWorkDataTable(data) {
 function fetchCityData(provinceCode,cityCode,year){
     let url =  userAddr + `/city?provinceCode=${provinceCode}&cityCode=${cityCode}&year=${year}`;
     fetchData(url,data =>{
-        if(data.cityBasicInfo == null || data.cityRankingData == null) {
-            alert('데이터가 존재하지 않습니다.');
+        console.log(data);
+        if(data.cityBasicInfo == null ) {
+            console.log('지역정보 데이터가 존재하지 않습니다.');
             return;
         }
+
         updateNumberDisplay("population", data.cityBasicInfo.totalPopulation);
         updateNumberDisplay("households", data.cityBasicInfo.householdCount);
         document.getElementById("avgHouseholds").textContent = data.cityBasicInfo.averageHouseholdSize;
@@ -209,6 +211,17 @@ function fetchCityData(provinceCode,cityCode,year){
         document.getElementById("averageAge").textContent = data.cityBasicInfo.averageAge;
         document.getElementById("agingIndex").textContent = data.cityBasicInfo.agingChildIndex;
 
+        if( data.cityRankingData == null) {
+            console.log('랭킹 데이터가 존재하지 않습니다.');
+
+            document.getElementById("populationRank").textContent = '-';
+            document.getElementById("popDensityRank").textContent = '-';
+            document.getElementById("agingRank").textContent = '-';
+            document.getElementById("householdRank").textContent = '-';
+            document.getElementById("workplaceRank").textContent = '-';
+            document.getElementById("employeeRank").textContent = '-';
+            return;
+        }
         document.getElementById("populationRank").textContent = data.cityRankingData.totalPopRank;
         document.getElementById("popDensityRank").textContent = data.cityRankingData.popDensityRank;
         document.getElementById("agingRank").textContent = data.cityRankingData.agedChildIdxRank;
