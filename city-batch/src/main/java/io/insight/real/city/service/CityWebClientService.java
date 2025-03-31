@@ -9,11 +9,8 @@ import io.insight.real.city.dto.request.CityBasicInfoRequest;
 import io.insight.real.city.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,7 +18,9 @@ import reactor.core.scheduler.Schedulers;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -31,7 +30,6 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Service
 public class CityWebClientService {
-    private final WebClient webClient;
     private final CommonWebClientService commonWebClientService;
     private final AuthenticationService authService;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -45,22 +43,23 @@ public class CityWebClientService {
     public Flux<CityBasicDto> fetchCityBasicInfos(List<CityBasicInfoRequest> requests) {
          String url = "/stats/population.json";
          return Flux.fromIterable(requests)
+                .delayElements(Duration.ofMillis(200))
                 .publishOn(Schedulers.boundedElastic())
-                 .flatMap(request -> {
-                     Function<ApiResponse, Flux<CityBasicDto>> convertApiResponse = response -> {
-                         List<CityBasicDto> list = Optional.ofNullable(
-                                 objectMapper.convertValue(response.getResult(), new TypeReference<List<CityBasicDto>>() {})
-                         ).orElse(Collections.emptyList());
+                .flatMap(request -> {
+                    Function<ApiResponse, Flux<CityBasicDto>> convertApiResponse = response -> {
+                        List<CityBasicDto> list = Optional.ofNullable(
+                                objectMapper.convertValue(response.getResult(), new TypeReference<List<CityBasicDto>>() {})
+                        ).orElse(Collections.emptyList());
 
-                         list.forEach(dto -> dto.setYear(request.getYear()));
-                         return Flux.fromIterable(list);
+                        list.forEach(dto -> dto.setYear(request.getYear()));
+                        return Flux.fromIterable(list);
                      };
 
-                     BodyInserters.FormInserter<String> body = BodyInserters.fromFormData("accessToken", authService.getAccessToken())
+                    BodyInserters.FormInserter<String> body = BodyInserters.fromFormData("accessToken", authService.getAccessToken())
                              .with("adm_cd", request.getAdmCd())
                              .with("year", request.getYear());
 
-                     return commonWebClientService.executeRequest(url, ApiResponse.class, body, convertApiResponse)
+                    return commonWebClientService.executeRequest(url, ApiResponse.class, body, convertApiResponse)
                              .retryWhen(Retry.fixedDelay(1, Duration.ofSeconds(1))
                                      .filter(this::isAccessTokenExpiredError) // AccessToken 만료 시 재시도
                                      .doBeforeRetryAsync(retrySignal -> {
@@ -70,20 +69,6 @@ public class CityWebClientService {
                                      })
                              );
                  });
-
-
-       /* return Flux.fromIterable(requests)
-                .publishOn(Schedulers.boundedElastic())
-                .flatMap(request -> executeRequest(authService.getAccessToken(), request)
-                    .retryWhen(Retry.fixedDelay(1, Duration.ofSeconds(1))
-                            .filter(this::isAccessTokenExpiredError) // AccessToken 만료 시 재시도
-                            .doBeforeRetryAsync(retrySignal -> {
-                                log.warn("AccessToken이 만료됨, 새로 갱신 후 재시도...");
-                                return Mono.fromRunnable(authService::getAccessToken) //새로운 AccessToken 즉시 갱신
-                                        .then();
-                            })
-                    )
-                );*/
     }
 
     public Flux<EmploymentDto> fetchCityEmpInfos(List<CityBasicInfoRequest> requests) {
@@ -160,38 +145,6 @@ public class CityWebClientService {
                                                 .then();
                                     })
                             );
-                });
-    }
-
-
-    /**
-     * 지역정보 API 비동기 호출 및 응답 dto mapping
-     * */
-    private Flux<CityBasicDto> executeRequest(String accessToken, CityBasicInfoRequest request) {
-        return webClient
-                .method(HttpMethod.GET)
-                .uri("/stats/population.json")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("accessToken", accessToken)
-                        .with("adm_cd", request.getAdmCd())
-                        .with("year", request.getYear()))
-                .retrieve()
-                .bodyToMono(ApiResponse.class)
-                .timeout(Duration.ofSeconds(60))
-              //  .retry(1)
-                .onErrorResume(error -> {
-                    log.error("API 호출 중 오류 발생", error);
-                    log.error("{}", error.getMessage());
-                    return Mono.empty(); // 에러 발생 시 Flux가 멈추지 않고 계속 진행
-                })
-                .flatMapMany(response -> {
-
-                    List<CityBasicDto> list = Optional.ofNullable(
-                            objectMapper.convertValue(response.getResult(), new TypeReference<List<CityBasicDto>>() {})
-                    ).orElse(Collections.emptyList());
-
-                    list.forEach(dto -> dto.setYear(request.getYear()));
-                    return Flux.fromIterable(list);
                 });
     }
 

@@ -30,7 +30,7 @@ public class EmploymentItemWriter implements ItemWriter<List<CityBasicInfoReques
     @BeforeStep
     public void beforeStep(StepExecution stepExecution) {
         this.stepExecution = stepExecution;  //StepExecution 주입
-        log.info("Step 시작: {}, 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
+        log.info("EmploymentItemWriter Step 시작: {}, 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
     }
     @Override
     public void write(Chunk<? extends List<CityBasicInfoRequest>> chunk) throws Exception {
@@ -77,7 +77,7 @@ public class EmploymentItemWriter implements ItemWriter<List<CityBasicInfoReques
 
     @AfterStep
     public ExitStatus afterStep(StepExecution stepExecution) {
-        log.info("Step 완료: {}, 최종 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
+        log.info("EmploymentItemWriter Step 완료: {}, 최종 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
         return stepExecution.getExitStatus();
     }
 }

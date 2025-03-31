@@ -31,8 +31,8 @@ public class PopulationItemWriter implements ItemWriter<List<CityBasicInfoReques
 
     @BeforeStep
     public void beforeStep(StepExecution stepExecution) {
-        this.stepExecution = stepExecution;  // ✅ StepExecution 주입
-        log.info("Step 시작: {}, 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
+        this.stepExecution = stepExecution;  // StepExecution 주입
+        log.info("PopulationItemWriter Step 시작: {}, 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
     }
     @Override
     public void write(Chunk<? extends List<CityBasicInfoRequest>> chunk) throws Exception {
@@ -41,7 +41,7 @@ public class PopulationItemWriter implements ItemWriter<List<CityBasicInfoReques
                 .toList();
 
         cityWebClientService.fetchPopInfo(items)
-                .buffer(100) // ✅ 100개씩 모아서 저장 (batch 처리)
+                .buffer(100) // 100개씩 모아서 저장 (batch 처리)
                 .flatMap(popDataList -> {
                     List<CityPopulation> populations = new ArrayList<>();
 
@@ -99,7 +99,7 @@ public class PopulationItemWriter implements ItemWriter<List<CityBasicInfoReques
 
     @AfterStep
     public ExitStatus afterStep(StepExecution stepExecution) {
-        log.info("Step 완료: {}, 최종 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
+        log.info("PopulationItemWriter Step 완료: {}, 최종 상태: {}", stepExecution.getStepName(), stepExecution.getStatus());
         return stepExecution.getExitStatus();
     }
 }

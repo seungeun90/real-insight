@@ -50,7 +50,6 @@ public class CityBasicItemReader implements ItemReader<List<CityBasicInfoRequest
             return null; // 모든 데이터를 읽으면 배치 종료
         }
 
-        log.info("read index: {} list size={}", index, admDistricts.size());
         AdministrativeDistrict province = admDistricts.get(index++); // 한 개씩 반환
 
         String provinceCode = province.getProvinceCode();
@@ -75,8 +74,6 @@ public class CityBasicItemReader implements ItemReader<List<CityBasicInfoRequest
             if (processedDistrictCodes.add(townCode)) {
                 codes.add(townCode);
             }
-
-
             processUpdateTargetCode(codes, requests);
         }
 
