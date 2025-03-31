@@ -157,10 +157,10 @@ function fetchCityPopulation(provinceCode,cityCode){
     fetchData(url,data => {
         popRankingData = data.popRankingData;
         cityPopulation = data.cityPopulation;
-        createPopInCityChart(cityPopulation);
         createAgeChart();
         populateTop5Table();
         populateRankingTable();
+        createPopInCityChart();
     });
 }
 
@@ -332,7 +332,8 @@ function createPopChart(data){
         options
     );
 }
-function createPopInCityChart(data){
+function createPopInCityChart(){
+    let data = cityPopulation;
     if (!data || data.length <= 0) return;
     const ctx = document.getElementById("populationInCityChart").getContext("2d");
     if (cityPopInCityChart) {
