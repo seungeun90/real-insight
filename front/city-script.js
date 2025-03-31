@@ -192,6 +192,10 @@ function renderWorkDataTable(data) {
 function fetchCityData(provinceCode,cityCode,year){
     let url =  userAddr + `/city?provinceCode=${provinceCode}&cityCode=${cityCode}&year=${year}`;
     fetchData(url,data =>{
+        if(data.cityBasicInfo == null || data.cityRankingData == null) {
+            alert('데이터가 존재하지 않습니다.');
+            return;
+        }
         updateNumberDisplay("population", data.cityBasicInfo.totalPopulation);
         updateNumberDisplay("households", data.cityBasicInfo.householdCount);
         document.getElementById("avgHouseholds").textContent = data.cityBasicInfo.averageHouseholdSize;
