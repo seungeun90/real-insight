@@ -22,10 +22,12 @@ body {
 .tab-content {
     width: 100%;
     max-width: 1200px;
-    min-height: 600px;
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
+
+    /* min-height 제거 또는 필요 시만 적용 */
+    /* min-height: 600px; → 주석 처리 또는 삭제 */
 }
 
 /* 정보 박스 (탭 안의 컨텐츠) */

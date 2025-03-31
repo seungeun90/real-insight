@@ -198,7 +198,6 @@ function renderWorkDataTable(data) {
 function fetchCityData(provinceCode,cityCode,year){
     let url =  userAddr + `/city?provinceCode=${provinceCode}&cityCode=${cityCode}&year=${year}`;
     fetchData(url,data =>{
-        console.log(data);
         if(data.cityBasicInfo == null ) {
             console.log('지역정보 데이터가 존재하지 않습니다.');
             return;
