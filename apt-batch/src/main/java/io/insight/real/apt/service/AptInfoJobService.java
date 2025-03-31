@@ -1,6 +1,5 @@
 package io.insight.real.apt.service;
 
-import io.insight.real.apt.batch.job.BatchJobStatusService;
 import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.response.AptIdInfo;
 import io.insight.real.apt.dto.response.AptResponse;
@@ -9,7 +8,6 @@ import io.insight.real.apt.repository.r2dbc.AptInfoCustomRepository;
 import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;

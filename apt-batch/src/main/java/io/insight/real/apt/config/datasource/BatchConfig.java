@@ -1,9 +1,6 @@
 package io.insight.real.apt.config.datasource;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.explore.support.JobExplorerFactoryBean;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
@@ -19,7 +16,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-//@RequiredArgsConstructor
 @Configuration
 @EnableBatchProcessing(dataSourceRef = "batchDataSource", transactionManagerRef = "batchTransactionManager")
 public class BatchConfig {
@@ -45,12 +41,14 @@ public class BatchConfig {
     public PlatformTransactionManager platformTransactionManager() {
         return batchTransactionManager;
     }
+
     @Bean(name = "asyncJobLauncher")
     @Primary
-    public JobLauncher asyncJobLauncher(JobRepository jobRepository, TaskExecutor batchTaskExecutor) {
+    public JobLauncher asyncJobLauncher(JobRepository jobRepository,
+                                        @Qualifier("batchTaskExecutor") TaskExecutor taskExecutor) {
         TaskExecutorJobLauncher jobLauncher = new TaskExecutorJobLauncher();
         jobLauncher.setJobRepository(jobRepository);
-        jobLauncher.setTaskExecutor(batchTaskExecutor); // 비동기 실행 설정
+        jobLauncher.setTaskExecutor(taskExecutor);
         return jobLauncher;
     }
 

@@ -1,12 +1,9 @@
-package io.insight.real.apt.batch;
+package io.insight.real.apt.service;
 
-import io.insight.real.apt.batch.job.JobTriggerService;
 import io.insight.real.apt.dto.BatchJobRequest;
 import io.insight.real.apt.dto.JobName;
-import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
 import io.insight.real.apt.repository.jpa.BatchJobRepository;
-import io.insight.real.apt.service.AptInfoJobService;
-import io.insight.real.apt.service.AptTradeJobService;
+import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +18,6 @@ import java.util.List;
 @Component
 public class ReservedBatchScheduler {
     private final BatchJobRepository batchJobRepository;
-    private final JobTriggerService jobTriggerService;
     private final AptInfoJobService aptInfoService;
     private final AptTradeJobService aptTradeJobService;
 
@@ -29,7 +25,6 @@ public class ReservedBatchScheduler {
     public void triggerReservedJobs() {
         LocalDateTime now = LocalDateTime.now();
         // 예약 시간이 지난 READY 상태의 Job들 가져오기
-        //List<BatchJobQueueJpa> readyJobs = batchJobRepository.findReadyJobs(now);
         List<BatchJobQueueJpa> readyJobs = batchJobRepository.findTop5Jobs(LocalDateTime.now(), PageRequest.of(0, 5));
 
         for (BatchJobQueueJpa job : readyJobs) {
@@ -51,8 +46,6 @@ public class ReservedBatchScheduler {
                 if(JobName.APT_INFO_JOB.name().equals(job.getJobName())) {
                     aptInfoService.triggerJob(job.getAddres(), job.getId());
                 }
-
-                //jobTriggerService.updateAptTradeJob(batchJobRequest);
 
                 log.info("예약 배치 실행 완료: {}, {}, {}", job.getId(), job.getJobName(), job.getAddres());
             } catch (Exception e) {

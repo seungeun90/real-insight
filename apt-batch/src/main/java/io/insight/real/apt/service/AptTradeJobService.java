@@ -1,15 +1,11 @@
 package io.insight.real.apt.service;
 
-import io.insight.real.apt.batch.ApiResponseUtil;
-import io.insight.real.apt.batch.job.BatchJobStatusService;
+import io.insight.real.apt.util.ApiResponseUtil;
 import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.BatchJobRequest;
 import io.insight.real.apt.dto.response.*;
-import io.insight.real.apt.repository.mapper.AptInfoMapper;
 import io.insight.real.apt.repository.mapper.AptTradeMapper;
-import io.insight.real.apt.repository.r2dbc.AptInfoCustomRepository;
 import io.insight.real.apt.repository.r2dbc.AptTradeRepository;
-import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
 import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +17,6 @@ import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.YearMonth;
 import java.util.*;

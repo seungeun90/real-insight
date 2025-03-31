@@ -1,8 +1,7 @@
-package io.insight.real.apt.batch;
+package io.insight.real.apt.util;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.insight.real.apt.dto.response.XmlErrorResponse;
-import io.insight.real.apt.dto.response.XmlResponse;
 import io.insight.real.apt.dto.response.XmlSuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
