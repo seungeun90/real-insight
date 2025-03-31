@@ -1,9 +1,9 @@
 package io.insight.real.apt.service;
 
-import io.insight.real.apt.repository.jpa.entity.Province;
-import io.insight.real.apt.repository.jpa.entity.Region;
+import io.insight.real.apt.repository.jpa.entity.LegalDistrictJpa;
+import io.insight.real.apt.repository.jpa.entity.ProvinceJpa;
+import io.insight.real.apt.repository.jpa.entity.RegionJpa;
 import io.insight.real.apt.repository.jpa.DistrictRepository;
-import io.insight.real.apt.repository.jpa.entity.LegalDistrict;
 import io.insight.real.apt.repository.jpa.ProvinceRepository;
 import io.insight.real.apt.repository.jpa.RegionRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +28,13 @@ public class LegalDistrictService {
     private final RegionRepository regionRepository;
     private final ProvinceRepository provinceRepository;
 
-    public List<Region> getRegions() {
+    public List<RegionJpa> getRegions() {
         return regionRepository.findAllByStatus("존재");
     }
 
     @Transactional
     public void readLegalDistricts(MultipartFile file) {
-        List<LegalDistrict> districtList = new ArrayList<>();
+        List<LegalDistrictJpa> districtList = new ArrayList<>();
         Map<String, Long> idMap = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(),"EUC-KR"))) {
             String line;
@@ -50,17 +50,17 @@ public class LegalDistrictService {
 
                 String[] parts = name.split(" ");
                 if(parts.length == 1) {
-                    Province province = Province.builder().code(regionCode).name(name).status(status).build();
-                    provinceRepository.save(province);
+                    ProvinceJpa provinceJpa = ProvinceJpa.builder().code(regionCode).name(name).status(status).build();
+                    provinceRepository.save(provinceJpa);
                 } else if (parts.length == 2) {
                     if(idMap.get(regionCode)==null) {
-                        Region region = Region.builder().code(regionCode).name(name).status(status).build();
-                        Region saved = regionRepository.save(region);
+                        RegionJpa regionJpa = RegionJpa.builder().code(regionCode).name(name).status(status).build();
+                        RegionJpa saved = regionRepository.save(regionJpa);
                         idMap.put(regionCode, saved.getId());
                     }
                 } else {
                     Long regionId = idMap.get(regionCode);
-                    LegalDistrict district = LegalDistrict.builder()
+                    LegalDistrictJpa district = LegalDistrictJpa.builder()
                             .regionId(regionId)
                             .code(districtCode)
                             .name(name)

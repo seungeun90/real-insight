@@ -9,21 +9,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="district")
-public class LegalDistrict {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name="province")
+public class ProvinceJpa {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long regionId;
-    private String code;   // 법정동 전체 코드
-    private String name; // 법정동명
+    private String code; // 시/도 + 군/구 코드 (5자리)
+    private String name;
     private String status; // 폐지 여부
+
     @Builder
-    public LegalDistrict(
-            Long regionId,
-            String code,
-            String name,
-            String status) {
-        this.regionId = regionId;
+    public ProvinceJpa(String code, String name, String status) {
         this.code = code;
         this.name = name;
         this.status = status;

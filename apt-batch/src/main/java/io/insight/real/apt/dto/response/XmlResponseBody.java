@@ -8,10 +8,10 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter
-public class ResponseBody {
+public class XmlResponseBody {
     @JacksonXmlElementWrapper(localName = "items")
     @JacksonXmlProperty(localName = "item")
-    private List<ApartmentItem> items;
+    private List<XmlApartmentItem> items;
 
     @JacksonXmlProperty(localName = "numOfRows")
     private int numOfRows;

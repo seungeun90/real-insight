@@ -1,4 +1,4 @@
-package io.insight.real.apt.dto.response;
+package io.insight.real.apt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

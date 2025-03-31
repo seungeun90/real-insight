@@ -10,5 +10,5 @@ import lombok.Setter;
 public class XmlErrorResponse implements XmlResponse {
 
     @JacksonXmlProperty(localName = "cmmMsgHeader")
-    private ErrorHeader cmmMsgHeader;
+    private XmlErrorHeader cmmMsgHeader;
 }

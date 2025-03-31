@@ -1,12 +1,11 @@
 package io.insight.real.apt.dto.response;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ApartmentItem {
+public class XmlApartmentItem {
 
     @JacksonXmlProperty(localName = "aptDong")
     private String aptDong;

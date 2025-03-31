@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ResponseHeader {
+public class XmlResponseHeader {
     @JacksonXmlProperty(localName = "resultCode")
     private String resultCode;
 

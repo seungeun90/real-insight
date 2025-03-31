@@ -6,8 +6,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.insight.real.apt.dto.SupplyAreaRange;
-import io.insight.real.apt.dto.response.AptTradeProfit;
-import io.insight.real.apt.dto.response.TradeInfo;
+import io.insight.real.apt.dto.AptTradeProfit;
+import io.insight.real.apt.dto.TradeInfo;
+import io.insight.real.apt.repository.jpa.entity.AptPriceDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

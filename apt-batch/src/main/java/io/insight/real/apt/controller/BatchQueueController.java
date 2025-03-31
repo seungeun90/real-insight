@@ -15,14 +15,14 @@ public class BatchQueueController {
 
     private final BatchReserveService batchReserveService;
 
-    @PostMapping("/apt/trade/batch")
+    @PostMapping("/schedules/apt-trade")
     public ResponseEntity<?> submitAptTradeJob(@RequestBody BatchJobRequest batchJobRequest) {
         batchReserveService.enqueueAptTradeJob(batchJobRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
-    @PostMapping("/apt/batch")
-    public ResponseEntity<?> getAptInfoJob(@RequestBody BatchJobRequest batchJobRequest) {
+    @PostMapping("/schedules/apt")
+    public ResponseEntity<?> submitAptInfoJob(@RequestBody BatchJobRequest batchJobRequest) {
         batchReserveService.enqueueAptInfoJob(batchJobRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }

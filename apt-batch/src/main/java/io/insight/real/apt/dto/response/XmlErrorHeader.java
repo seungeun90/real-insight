@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ErrorHeader {
+public class XmlErrorHeader {
     @JacksonXmlProperty(localName = "errMsg")
     private String errMsg;
 

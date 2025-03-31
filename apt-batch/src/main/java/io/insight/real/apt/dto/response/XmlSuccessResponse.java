@@ -10,10 +10,10 @@ import lombok.Setter;
 public class XmlSuccessResponse implements XmlResponse {
 
     @JacksonXmlProperty(localName = "header")
-    private ResponseHeader header;
+    private XmlResponseHeader header;
 
     @JacksonXmlProperty(localName = "body")
-    private ResponseBody body;
+    private XmlResponseBody body;
 
 
 } 

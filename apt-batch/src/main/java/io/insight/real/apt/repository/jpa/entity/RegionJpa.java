@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="province")
-public class Province {
-
+@Table(name="region")
+public class RegionJpa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +19,7 @@ public class Province {
     private String status; // 폐지 여부
 
     @Builder
-    public Province(String code, String name, String status) {
+    public RegionJpa(String code, String name, String status) {
         this.code = code;
         this.name = name;
         this.status = status;

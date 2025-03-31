@@ -1,10 +1,11 @@
 package io.insight.real.apt.service;
 
 import io.insight.real.apt.dto.JobStatus;
+import io.insight.real.apt.dto.response.XmlApartmentItem;
+import io.insight.real.apt.dto.response.XmlResponseBody;
 import io.insight.real.apt.util.ApiResponseUtil;
 import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.BatchJobRequest;
-import io.insight.real.apt.dto.response.*;
 import io.insight.real.apt.repository.mapper.AptTradeMapper;
 import io.insight.real.apt.repository.r2dbc.AptTradeRepository;
 import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
@@ -94,7 +95,7 @@ public class AptTradeJobService {
                 })
                 .flatMap(apiResponse -> {
                     return Flux.fromIterable(Optional.ofNullable(apiResponse.getBody())
-                                    .map(ResponseBody::getItems)
+                                    .map(XmlResponseBody::getItems)
                                     .orElse(Collections.emptyList()))
                             .buffer(100)
                             .flatMap(this::saveBatchToDatabase);
@@ -102,7 +103,7 @@ public class AptTradeJobService {
                 .then(); // 작업 완료 후 signal만 반환
     }
 
-    private Mono<Void> saveBatchToDatabase(List<ApartmentItem> items) {
+    private Mono<Void> saveBatchToDatabase(List<XmlApartmentItem> items) {
         List<AptTrade> entities = aptTradeMapper.toEntities(items);
         return aptTradeRepository.saveAll(entities)
                 .then();
