@@ -30,6 +30,13 @@ public class PopulationRepositoryImpl implements PopulationRepository {
             query.addCriteria(Criteria.where("cityCode").is(cityCode));
         }
 
+        query.addCriteria(
+                new Criteria().andOperator(
+                        Criteria.where("townCode").ne(null),
+                        Criteria.where("townCode").ne("")
+                )
+        );
+
         return mongoTemplate.find(query, CityPopulation.class, "population");
     }
     /**
@@ -44,6 +51,12 @@ public class PopulationRepositoryImpl implements PopulationRepository {
         if (cityCode != null) {
             query.addCriteria(Criteria.where("cityCode").is(cityCode));
         }
+        query.addCriteria(
+                new Criteria().andOperator(
+                        Criteria.where("townCode").ne(null),
+                        Criteria.where("townCode").ne("")
+                )
+        );
 
         return mongoTemplate.find(query, PopRankingData.class, "pop_ranking");
     }
