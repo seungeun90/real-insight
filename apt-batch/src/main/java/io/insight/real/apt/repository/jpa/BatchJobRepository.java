@@ -12,15 +12,10 @@ import java.util.List;
 
 @Repository
 public interface BatchJobRepository extends JpaRepository<BatchJobQueueJpa, Long> {
-    @Query("SELECT COUNT(b) FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'IN_PROGRESS') AND b.scheduledAt <= :now")
+    @Query("SELECT COUNT(b) FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'IN_PROGRESS')")
     int countActiveJobs(@Param("now") LocalDateTime now);
 
-    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now")
+    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now order by b.scheduledAt asc")
     List<BatchJobQueueJpa> findTop5Jobs(@Param("now") LocalDateTime now, Pageable pageable);
 
-    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now AND b.jobName='APT_INFO_JOB'")
-    List<BatchJobQueueJpa> findTop5JobsTemp(@Param("now") LocalDateTime now, Pageable pageable);
-
-    @Query("SELECT b FROM BatchJobQueueJpa b WHERE b.status IN ('READY', 'FAILED') AND b.scheduledAt <= :now")
-    List<BatchJobQueueJpa> findReadyJobs(@Param("now") LocalDateTime now);
 }
