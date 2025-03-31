@@ -422,7 +422,7 @@ function createPopInCityChart(){
 
     cityPopInCityChart = createChart(
         cityPopInCityChart,
-        "cityPopInCityChart",
+        "populationInCityChart",
         "bar",
         { labels, datasets },
         options
