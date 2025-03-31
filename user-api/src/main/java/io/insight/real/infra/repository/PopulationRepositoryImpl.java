@@ -1,6 +1,5 @@
 package io.insight.real.infra.repository;
 
-import io.insight.real.dto.CityPopulationData;
 import io.insight.real.dto.PopRankingData;
 import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.infra.repository.entity.District;
@@ -21,34 +20,31 @@ import java.util.stream.Collectors;
 public class PopulationRepositoryImpl implements PopulationRepository {
     private final MongoTemplate mongoTemplate;
 
-    public CityPopulationData getPopulationDataInCity(String provinceCode, String cityCode) {
-        //인구 정보는 연도 조건 없음
-        Query common = new Query();
+    public List<CityPopulation> getPopulation(String provinceCode, String cityCode) {
+        Query query = new Query();
 
         if (provinceCode != null) {
-            common.addCriteria(Criteria.where("provinceCode").is(provinceCode));
+            query.addCriteria(Criteria.where("provinceCode").is(provinceCode));
         }
         if (cityCode != null) {
-            common.addCriteria(Criteria.where("cityCode").is(cityCode));
+            query.addCriteria(Criteria.where("cityCode").is(cityCode));
         }
 
-        List<CityPopulation> population = getPopulation(common);
-        List<PopRankingData> populationRank = getPopulationRank(common);
-
-        return CityPopulationData.builder()
-                .cityPopulation(population)
-                .popRankingData(populationRank)
-                .build();
-
-    }
-
-    private List<CityPopulation> getPopulation(Query query) {
         return mongoTemplate.find(query, CityPopulation.class, "population");
     }
     /**
      *
      * */
-    private List<PopRankingData> getPopulationRank(Query query) {
+    public List<PopRankingData> getPopulationRank(String provinceCode, String cityCode) {
+        Query query = new Query();
+
+        if (provinceCode != null) {
+            query.addCriteria(Criteria.where("provinceCode").is(provinceCode));
+        }
+        if (cityCode != null) {
+            query.addCriteria(Criteria.where("cityCode").is(cityCode));
+        }
+
         return mongoTemplate.find(query, PopRankingData.class, "pop_ranking");
     }
 

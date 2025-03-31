@@ -1,11 +1,8 @@
 package io.insight.real.infra.repository;
 
 import io.insight.real.dto.CityBasicData;
-import io.insight.real.dto.CityPopulationData;
-import io.insight.real.dto.PopRankingData;
-import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.dto.CityRankingData;
-import io.insight.real.infra.repository.entity.CityPopulation;
+import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.District;
 import io.insight.real.infra.repository.entity.Employment;
 import io.insight.real.infra.repository.jpa.CityRankingRepository;
@@ -55,7 +52,7 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
      * 지역 기초 정보
      * 인구 수, 가구 수, 인구 밀도, 노령화지수, 평균 연령 정보
      * */
-    private CityBasicInfo getCityData(String admCd, String year) {
+    public CityBasicInfo getCityData(String admCd, String year) {
         Query query = new Query();
         query.addCriteria(Criteria.where("admCd").is(admCd));
         query.addCriteria(Criteria.where("year").is(year));

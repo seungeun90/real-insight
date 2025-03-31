@@ -1,7 +1,12 @@
 package io.insight.real.service.out;
 
-import io.insight.real.dto.CityPopulationData;
+import io.insight.real.dto.PopRankingData;
+import io.insight.real.infra.repository.entity.CityPopulation;
+
+import java.util.List;
 
 public interface PopulationRepository {
-    CityPopulationData getPopulationDataInCity(String provinceCode, String cityCode);
+    List<CityPopulation> getPopulation(String provinceCode, String cityCode);
+    List<PopRankingData> getPopulationRank(String provinceCode, String cityCode);
+
 }

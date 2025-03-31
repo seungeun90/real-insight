@@ -8,6 +8,7 @@ import io.insight.real.infra.repository.entity.Employment;
 import java.util.List;
 
 public interface CityRankingSearchRepository {
+    CityBasicInfo getCityData(String admCd, String year);
     CityBasicData findCityData(String provinceCode, String cityCode, String year);
     List<CityBasicInfo> getCityPopInPvc(String provinceCode, String year);
     List<Employment> getWorkData(String provinceCode, String cityCode);

@@ -16,6 +16,10 @@ import java.util.List;
 public class CityServiceImpl implements CityService {
     private final CityRankingSearchRepository cityRankingRepository;
 
+    public CityBasicInfo getCityData(String admCd, String year) {
+        return cityRankingRepository.getCityData(admCd, year);
+    }
+
     public CityBasicData getCityData(String provinceCode, String cityCode, String year) {
         return cityRankingRepository.findCityData(provinceCode,cityCode,year);
     }
