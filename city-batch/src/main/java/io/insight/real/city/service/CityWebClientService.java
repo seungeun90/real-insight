@@ -43,7 +43,36 @@ public class CityWebClientService {
      * @return Flux<CityBasicDto> : 지역 정보 dto 목록
      * */
     public Flux<CityBasicDto> fetchCityBasicInfos(List<CityBasicInfoRequest> requests) {
-        return Flux.fromIterable(requests)
+         String url = "/stats/population.json";
+         return Flux.fromIterable(requests)
+                .publishOn(Schedulers.boundedElastic())
+                 .flatMap(request -> {
+                     Function<ApiResponse, Flux<CityBasicDto>> convertApiResponse = response -> {
+                         List<CityBasicDto> list = Optional.ofNullable(
+                                 objectMapper.convertValue(response.getResult(), new TypeReference<List<CityBasicDto>>() {})
+                         ).orElse(Collections.emptyList());
+
+                         list.forEach(dto -> dto.setYear(request.getYear()));
+                         return Flux.fromIterable(list);
+                     };
+
+                     BodyInserters.FormInserter<String> body = BodyInserters.fromFormData("accessToken", authService.getAccessToken())
+                             .with("adm_cd", request.getAdmCd())
+                             .with("year", request.getYear());
+
+                     return commonWebClientService.executeRequest(url, ApiResponse.class, body, convertApiResponse)
+                             .retryWhen(Retry.fixedDelay(1, Duration.ofSeconds(1))
+                                     .filter(this::isAccessTokenExpiredError) // AccessToken 만료 시 재시도
+                                     .doBeforeRetryAsync(retrySignal -> {
+                                         log.warn("AccessToken이 만료됨, 새로 갱신 후 재시도...");
+                                         return Mono.fromRunnable(authService::getAccessToken) // 새로운 AccessToken 즉시 갱신
+                                                 .then();
+                                     })
+                             );
+                 });
+
+
+       /* return Flux.fromIterable(requests)
                 .publishOn(Schedulers.boundedElastic())
                 .flatMap(request -> executeRequest(authService.getAccessToken(), request)
                     .retryWhen(Retry.fixedDelay(1, Duration.ofSeconds(1))
@@ -54,7 +83,7 @@ public class CityWebClientService {
                                         .then();
                             })
                     )
-                );
+                );*/
     }
 
     public Flux<EmploymentDto> fetchCityEmpInfos(List<CityBasicInfoRequest> requests) {
@@ -86,7 +115,7 @@ public class CityWebClientService {
                             .with("adm_cd", request.getAdmCd())
                             .with("year", request.getYear());
 
-                    return commonWebClientService.executeRequest(url, body, convertApiResponse)
+                    return commonWebClientService.executeRequest(url, ApiResponse.class, body, convertApiResponse)
                             .retryWhen(Retry.fixedDelay(1, Duration.ofSeconds(1))
                                     .filter(this::isAccessTokenExpiredError) // AccessToken 만료 시 재시도
                                     .doBeforeRetryAsync(retrySignal -> {
@@ -114,7 +143,7 @@ public class CityWebClientService {
                                 new TypeReference<List<PopulationDto>>() {})).orElse(Collections.emptyList());
 
                         if (list.isEmpty()) {
-                            log.warn("🚨 변환된 PopulationDto 리스트가 비어 있습니다. 요청 AdmCd: {}", request.getAdmCd());
+                            log.warn("변환된 PopulationDto 리스트가 비어 있습니다. 요청 AdmCd: {}", request.getAdmCd());
                         }
 
                         return Flux.fromIterable(list)
@@ -122,7 +151,7 @@ public class CityWebClientService {
                     };
                     BodyInserters.FormInserter<String> body = BodyInserters.fromFormData("accessToken", authService.getAccessToken())
                             .with("adm_cd", request.getAdmCd());
-                    return commonWebClientService.executeRequest(url, body, convertApiResponse)
+                    return commonWebClientService.executeRequest(url,ApiResponse.class, body, convertApiResponse)
                             .retryWhen(Retry.fixedDelay(1, Duration.ofSeconds(1))
                                     .filter(this::isAccessTokenExpiredError) // AccessToken 만료 시 재시도
                                     .doBeforeRetryAsync(retrySignal -> {
@@ -156,10 +185,12 @@ public class CityWebClientService {
                     return Mono.empty(); // 에러 발생 시 Flux가 멈추지 않고 계속 진행
                 })
                 .flatMapMany(response -> {
-                    List<CityBasicDto> list = objectMapper.convertValue(response.getResult(),
-                            new TypeReference<List<CityBasicDto>>() {
-                            });
-                    list.forEach(dto -> dto.setYear(request.getYear())); // 추가 데이터 설정
+
+                    List<CityBasicDto> list = Optional.ofNullable(
+                            objectMapper.convertValue(response.getResult(), new TypeReference<List<CityBasicDto>>() {})
+                    ).orElse(Collections.emptyList());
+
+                    list.forEach(dto -> dto.setYear(request.getYear()));
                     return Flux.fromIterable(list);
                 });
     }
