@@ -238,16 +238,40 @@ function createPopChart(data){
         cityPopChart.destroy();
     }
     const labels = data.map(entry => entry.cityName); // 구 이름 목록
+
     const datasets = [
         {
-            label: "총 인구 수",
-            data: data.map(entry => parseInt(entry.totalPopulation, 10)), // 숫자로 변환
-            backgroundColor: "rgba(54, 162, 235, 0.7)", // 파란색
-            borderColor: "rgba(54, 162, 235, 1)", // 테두리 색상
-            borderWidth: 1
+            label: "인구 수",
+            data: data.map(entry => parseInt(entry.totalPopulation, 10)),
+            backgroundColor: "rgba(54, 162, 235, 0.7)",
+            yAxisID: "yPopulation"
+        },
+        {
+            label: "가구 수",
+            data: data.map(entry => parseInt(entry.householdCount || 0)),
+            backgroundColor: "rgba(255, 99, 132, 0.7)",
+            yAxisID: "yHousehold"
+        },
+        {
+            label: "평균 가구원 수",
+            data: data.map(entry => parseInt(entry.averageHouseholdSize || 0)),
+            type: "line",
+            borderColor: "rgba(255, 206, 86, 1)",
+            backgroundColor: "rgba(255, 206, 86, 0.3)",
+            borderWidth: 2,
+            pointBackgroundColor: "rgba(255, 206, 86, 1)",
+            fill: false,
+            yAxisID: "yHidden",
+            datalabels: {
+                anchor: "end",
+                align: "top",
+                formatter: value => `${value}`,
+                color: "#000"
+            }
         }
     ];
-    var options = {
+
+    /*var options = {
         responsive: true,
         scales: {
             y: {
@@ -273,14 +297,67 @@ function createPopChart(data){
                 }
             }
         }
+    };*/
+
+    const tooltipConfig = {
+        getValue: (dataset, index) => dataset.data[index] ? Number(dataset.data[index]).toLocaleString() : "-"
     };
+
+    const options = {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: context => {
+                        const value = context.raw || 0;
+                        return `${context.dataset.label}: ${Number(value).toLocaleString()}`;
+                    }
+                }
+            },
+            legend: {
+                position: "top"
+            }
+        },
+        scales: {
+            yPopulation: {
+                type: "linear",
+                position: "left",
+                title: {
+                    display: true,
+                    text: "인구 수"
+                },
+                ticks: {
+                    callback: value => Number(value).toLocaleString()
+                }
+            },
+            yHousehold: {
+                type: "linear",
+                position: "right",
+                title: {
+                    display: true,
+                    text: "가구 수"
+                },
+                grid: { drawOnChartArea: false },
+                ticks: {
+                    callback: value => Number(value).toLocaleString()
+                }
+            },
+            yHidden: {
+                display: false, //  축 숨김!
+                min: 0,
+                max: 5
+            }
+        }
+    };
+
     cityPopChart = createChart(
         cityPopChart,
         "populationChart",
         "bar",
-        {labels, datasets},
-        {options}
-    )
+        { labels, datasets },
+        options
+    );
+
 }
 function createWorkChart(data){
     if (!data || data.length <= 0) return;
@@ -345,21 +422,7 @@ function createWorkChart(data){
                 grid: { drawOnChartArea: false } // ✅ 오른쪽 y축 그리드 제거
             }
         }
-        // scales: {
-        //     //x: { stacked: true },
-        //     y: {
-        //         //stacked: true,
-        //         type: "logarithmic", // 로그 스케일 적용
-        //         min: 3000,  // 최소값 설정
-        //         max: 1000000, // 최대값 설정
-        //         ticks: {
-        //             callback: function(value) {
-        //                 const values = [3000, 10000, 30000, 50000, 70000, 90000];
-        //                 return values.includes(value) ? value.toLocaleString() : ""; // 특정 값만 표시
-        //             }
-        //         }
-        //     }
-        // } 
+
     }
     workChart = createChart(
         workChart,
