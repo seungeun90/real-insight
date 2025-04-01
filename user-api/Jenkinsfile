@@ -130,6 +130,7 @@ pipeline {
                         def dockerCommand = """
                              docker run -d --rm --name ${MODULE} \
                              --env=SPRING_PROFILES_ACTIVE="${env.DEPLOY_STAGE}" \
+                             -v /home/ec2-user/logs/${MODULE}:/logs \
                              -p ${modulePort}:${modulePort} ${imageTag}
                         """
 

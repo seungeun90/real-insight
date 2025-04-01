@@ -17,6 +17,7 @@ spring:
     username : admin
     password: secret
 logging:
+  config: classpath:logback/logback-spring.xml #BOOT-INF/classes/logback/logback-spring.xml
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 management:
@@ -30,3 +31,4 @@ management:
     export:
       prometheus:
         enabled: true
+
