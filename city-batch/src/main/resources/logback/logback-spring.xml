@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="DAILY_LOG_FILE_ALL" value="admin.log"/>
+
+    <springProfile name="local">
+        <property name="DAILY_LOG_PATH" value="/logs"/>
+    </springProfile>
+    <springProfile name="dev,stage,prod">
+        <property name="DAILY_LOG_PATH" value="/logs"/>
+    </springProfile>
+
+    <springProfile name="local,dev,stage,prod">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%date{ISO8601} [%thread] %level %logger{10} - %.-4096msg%n</pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </appender>
+
+        <appender name="DAILY_ROLLING_FILE_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${DAILY_LOG_PATH}/${DAILY_LOG_FILE_ALL}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- 일별 롤링 -->
+                <fileNamePattern>${DAILY_LOG_PATH}${DAILY_LOG_FILE_ALL}.%d{yyyy-MM-dd}</fileNamePattern>
+                <maxHistory>7</maxHistory>
+            </rollingPolicy>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>%date{ISO8601} [%thread] %level %logger{10} - %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+            <!-- 모든 레벨의 로그를 허용하므로 필터 제거 -->
+        </appender>
+
+    </springProfile>
+
+
+    <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+        <logger name="org.springframework.web" level="DEBUG"/>
+        <logger name="org.springframework.web.servlet.handler" level="DEBUG"/>
+        <logger name="org.springframework.web.client" level="DEBUG"/>
+        <logger name="com.clp" level="DEBUG"/>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="jdbc.resultsettable" level="WARN"/>
+        <logger name="jdbc.resultset" level="WARN"/>
+        <logger name="jdbc.audit" level="WARN"/>
+        <logger name="jdbc.sqltiming" level="WARN"/>
+        <logger name="jdbc.sqlonly" level="WARN"/>
+        <logger name="jdbc.connection" level="WARN"/>
+        <Logger name="software.amazon.awssdk" level="WARN" />
+        <Logger name="software.amazon.awssdk.request" level="DEBUG" />
+
+        <root level="INFO">
+            <appender-ref ref="DAILY_ROLLING_FILE_ALL" />
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+        <logger name="org.springframework.web" level="INFO"/>
+        <logger name="org.springframework.web.servlet.handler" level="INFO"/>
+        <logger name="org.springframework.web.client" level="DEBUG"/>
+        <logger name="com.clp" level="DEBUG"/>
+        <logger name="net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator" level="DEBUG"/>
+
+        <root level="INFO">
+            <appender-ref ref="DAILY_ROLLING_FILE_ALL" />
+        </root>
+    </springProfile>
+
+    <springProfile name="stage,prod">
+        <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+        <logger name="org.springframework.web" level="INFO"/>
+        <logger name="org.springframework.web.servlet.handler" level="INFO"/>
+        <logger name="org.springframework.web.client" level="INFO"/>
+        <logger name="com.clp" level="INFO"/>
+        <logger name="net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator" level="ERROR"/>
+
+        <root level="INFO">
+            <appender-ref ref="DAILY_ROLLING_FILE_ALL" />
+        </root>
+    </springProfile>
+
+</configuration>

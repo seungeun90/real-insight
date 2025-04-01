@@ -111,3 +111,5 @@ management:
     export:
       prometheus:
         enabled: true
+logging:
+  config: classpath:logback/logback-spring.xml #BOOT-INF/classes/logback/logback-spring.xml

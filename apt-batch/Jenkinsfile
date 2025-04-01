@@ -130,6 +130,7 @@ pipeline {
                         echo "Starting new container"
                         def dockerCommand = """
                              docker run -d --rm --name ${MODULE} \
+                             -v /home/ec2-user/logs/${MODULE}:/logs \
                              --env=SPRING_PROFILES_ACTIVE="${env.DEPLOY_STAGE}" \
                              --env=APT_API_SECRET="${env.APT_API_SECRET}" \
                              -p ${modulePort}:${modulePort} ${imageTag}
