@@ -2,6 +2,7 @@ package io.insight.real.city.service;
 
 import io.insight.real.city.repository.entity.AdministrativeDistrict;
 import io.insight.real.city.repository.jpa.AdministrativeDistrictRepository;
+import io.insight.real.city.service.in.DistrictService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -16,29 +17,35 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ExcelReaderService {
+public class DistrictServiceImpl implements DistrictService {
     private final AdministrativeDistrictRepository repository;
 
-
+    @Override
     public long getDistrictDataCount(){
         return repository.count();
     }
 
+    public List<String> getDistinctProvinceCodes(){
+        return repository.findDistinctProvinceCodes();
+    }
+
+    public List<AdministrativeDistrict> getByProvinceCode(String provinceCode){
+        return repository.findByProvinceCode(provinceCode);
+    }
+
+
     @Transactional
-    public void readAndInsertExcel(MultipartFile file) {
+    @Override
+    public void readExcelAndSave(MultipartFile file) {
         List<AdministrativeDistrict> districts = new ArrayList<>();
 
         // 파일 확장자 체크 (NPE 방지)
         String extension = FilenameUtils.getExtension(Objects.requireNonNull(file.getOriginalFilename()));
-        boolean isFirstRow = true;
         try (Workbook workbook = extension.equalsIgnoreCase("xls")
                 ? new HSSFWorkbook(file.getInputStream())  // Excel 97-2003 (xls)
                 : new XSSFWorkbook(file.getInputStream())) { // Excel 2007+ (xlsx)
@@ -81,6 +88,7 @@ public class ExcelReaderService {
             throw new RuntimeException("Excel 파일 처리 중 오류 발생", e);
         }
     }
+
     private String getCellValue(Cell cell) {
         if (cell == null) {
             return "";

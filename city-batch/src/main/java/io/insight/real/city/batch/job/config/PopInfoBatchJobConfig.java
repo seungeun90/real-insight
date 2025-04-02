@@ -1,4 +1,4 @@
-package io.insight.real.city.batch.job;
+package io.insight.real.city.batch.job.config;
 
 import io.insight.real.city.batch.pop.PopulationItemReader;
 import io.insight.real.city.batch.pop.PopulationItemWriter;

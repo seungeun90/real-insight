@@ -1,7 +1,8 @@
 package io.insight.real.city.service;
 
 import io.insight.real.city.repository.entity.AdministrativeDistrict;
-import io.insight.real.city.repository.jpa.AdministrativeDistrictRepository;
+import io.insight.real.city.service.in.DistrictService;
+import io.insight.real.city.service.in.RegionMessageSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,20 +12,20 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class RegionUpdateService {
-    private final AdministrativeDistrictRepository districtRepository;
+public class RegionMessageSenderServiceImpl implements RegionMessageSenderService {
+    private final DistrictService districtService;
     private final MessageSenderService messageSenderService;
 
+    @Override
     public void publishDistrictMessage(){
-        List<String> distinctProvinceCodes = districtRepository.findDistinctProvinceCodes();
+        List<String> distinctProvinceCodes = districtService.getDistinctProvinceCodes();
         for (String code : distinctProvinceCodes) {
             Map<String, Object> district = getDistrict(code);
             messageSenderService.publishDistrictMessage(district);
         }
     }
-
     private Map<String, Object> getDistrict(String provinceCode) {
-        List<AdministrativeDistrict> districts = districtRepository.findByProvinceCode(provinceCode);
+        List<AdministrativeDistrict> districts = districtService.getByProvinceCode(provinceCode);
         // 도시별로 그룹화
         Map<String, Map<String, Object>> cityMap = new LinkedHashMap<>();
 
@@ -54,7 +55,5 @@ public class RegionUpdateService {
 
         return provinceJson;
     }
-
-
 
 }

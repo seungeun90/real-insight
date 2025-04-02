@@ -1,4 +1,4 @@
-package io.insight.real.city.batch.job;
+package io.insight.real.city.batch.job.config;
 
 import io.insight.real.city.batch.rank.CityInfoRankingProcessor;
 import io.insight.real.city.batch.rank.CityInfoRankingReader;
