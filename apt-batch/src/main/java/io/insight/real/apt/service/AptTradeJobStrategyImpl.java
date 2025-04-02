@@ -28,7 +28,7 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AptTradeJobServiceImpl implements JobStrategy {
+public class AptTradeJobStrategyImpl implements JobStrategy {
     private final CommonWebClientService webClientService;
     private final ApiProperties apiProperties;
     private final BatchJobStatusService batchJobStatusService;

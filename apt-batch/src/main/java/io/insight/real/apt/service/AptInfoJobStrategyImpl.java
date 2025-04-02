@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AptInfoJobServiceImpl implements JobStrategy {
+public class AptInfoJobStrategyImpl implements JobStrategy {
     private final CommonWebClientService webClientService;
     private final ApiProperties apiProperties;
     private final AptInfoCustomRepository aptInfoCustomRepository;

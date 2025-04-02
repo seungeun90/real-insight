@@ -20,8 +20,8 @@ import java.time.temporal.ChronoUnit;
 public class BatchReserveServiceImpl implements BatchReserveService {
 
     private final BatchJobRepository batchJobRepository;
-    private final AptInfoJobServiceImpl aptInfoService;
-    private final AptTradeJobServiceImpl aptTradeJobService;
+    private final AptInfoJobStrategyImpl aptInfoService;
+    private final AptTradeJobStrategyImpl aptTradeJobService;
 
     @Transactional
     public void enqueueAptTradeJob(BatchJobRequest request) {

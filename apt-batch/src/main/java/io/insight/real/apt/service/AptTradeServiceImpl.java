@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AptTradeInfoServiceImpl implements AptTradeInfoService {
+public class AptTradeServiceImpl implements AptTradeInfoService {
     private final AptTradeQueryRepository aptTradeQueryRepository;
 
     @Override

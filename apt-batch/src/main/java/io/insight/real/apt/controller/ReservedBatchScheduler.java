@@ -17,12 +17,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class ReservedBatchScheduler {
 
-    private Map<JobName, JobStrategy> strategies;
-    private BatchJobStatusService batchJobService;
+    private final Map<JobName, JobStrategy> strategies;
+    private final BatchJobStatusService batchJobService;
+
     public ReservedBatchScheduler(
             BatchJobStatusService batchJobService,
             List<JobStrategy> strategies) {
