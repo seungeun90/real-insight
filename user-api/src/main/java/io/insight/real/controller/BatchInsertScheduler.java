@@ -1,8 +1,9 @@
-package io.insight.real.infra;
+package io.insight.real.controller;
 
 
 import io.insight.real.dto.CityRankingData;
 import io.insight.real.dto.PopRankingData;
+import io.insight.real.infra.MessageQueue;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.infra.repository.entity.Employment;
@@ -21,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class BatchInsertService {
+public class BatchInsertScheduler {
     private final MessageQueue<CityPopulation> populationDataQueue;
     private final MessageQueue<CityBasicInfo> cityDataQueue;
     private final MessageQueue<Employment> employmentQueue;
@@ -31,7 +32,7 @@ public class BatchInsertService {
     private final EmploymentRepository employmentRepository;
 
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(fixedRate = 30000)
     public void insertPopBatchData() {
         if (populationDataQueue.size() > 0) {
             List<CityPopulation> batchList = populationDataQueue.getBatch();
@@ -40,7 +41,7 @@ public class BatchInsertService {
         }
     }
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(fixedRate = 30000)
     public void insertEmploymentBatchData() {
         if (employmentQueue.size() > 0) {
             List<Employment> batchList = employmentQueue.getBatch();
@@ -49,7 +50,7 @@ public class BatchInsertService {
         }
     }
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(fixedRate = 30000)
     public void insertCityBatchData() {
         if (cityDataQueue.size() > 0) {
             List<CityBasicInfo> batchList = cityDataQueue.getBatch();

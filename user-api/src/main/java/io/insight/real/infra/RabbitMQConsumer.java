@@ -1,6 +1,7 @@
 package io.insight.real.infra;
 
 import com.rabbitmq.client.Channel;
+import io.insight.real.controller.BatchInsertScheduler;
 import io.insight.real.dto.CityRankingData;
 import io.insight.real.dto.PopRankingData;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
@@ -25,7 +26,7 @@ public class RabbitMQConsumer {
     private final MessageQueue<CityPopulation> populationDataQueue;
     private final MessageQueue<CityBasicInfo> cityDataQueue;
     private final MessageQueue<Employment> employmentDataQueue;
-    private final BatchInsertService batchInsertService;
+    private final BatchInsertScheduler batchInsertService;
 
     @RabbitListener(queues = "pop-queue", ackMode = "MANUAL")
     public void receivePopMessage(CityPopulation message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
