@@ -1,6 +1,6 @@
 package io.insight.real.apt.repository.mapper;
 
-import io.insight.real.apt.dto.response.AptIdInfo;
+import io.insight.real.apt.dto.in.AptIdInfo;
 import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
 import org.mapstruct.Mapper;
 

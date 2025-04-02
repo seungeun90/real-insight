@@ -1,8 +1,10 @@
 package io.insight.real.apt.service;
 
+import io.insight.real.apt.dto.JobName;
 import io.insight.real.apt.dto.JobStatus;
-import io.insight.real.apt.dto.response.XmlApartmentItem;
-import io.insight.real.apt.dto.response.XmlResponseBody;
+import io.insight.real.apt.dto.in.XmlApartmentItem;
+import io.insight.real.apt.dto.in.XmlResponseBody;
+import io.insight.real.apt.service.in.JobStrategy;
 import io.insight.real.apt.util.ApiResponseUtil;
 import io.insight.real.apt.config.ApiProperties;
 import io.insight.real.apt.dto.BatchJobRequest;
@@ -26,7 +28,7 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AptTradeJobService {
+public class AptTradeJobServiceImpl implements JobStrategy {
     private final CommonWebClientService webClientService;
     private final ApiProperties apiProperties;
     private final BatchJobStatusService batchJobStatusService;
@@ -34,6 +36,7 @@ public class AptTradeJobService {
     private final AptTradeMapper aptTradeMapper;
     private final ApiResponseUtil apiResponseUtil;
 
+    @Override
     public void triggerJob(BatchJobRequest request){
         String startDate = request.getStartDate();
         String endDate = request.getEndDate();
@@ -85,6 +88,12 @@ public class AptTradeJobService {
                     }
             );
     }
+
+    @Override
+    public JobName getJobType() {
+        return JobName.APT_TRADE_JOB;
+    }
+
     private Mono<Void> runAptJob(String regionCode, String month, String adres, Long jobId, int totalPages) {
         return Flux.range(1, totalPages)
                 .delayElements(Duration.ofSeconds(1))

@@ -1,11 +1,12 @@
 package io.insight.real.apt.service;
 
-import io.insight.real.apt.repository.jpa.entity.LegalDistrictJpa;
-import io.insight.real.apt.repository.jpa.entity.ProvinceJpa;
-import io.insight.real.apt.repository.jpa.entity.RegionJpa;
 import io.insight.real.apt.repository.jpa.DistrictRepository;
 import io.insight.real.apt.repository.jpa.ProvinceRepository;
 import io.insight.real.apt.repository.jpa.RegionRepository;
+import io.insight.real.apt.repository.jpa.entity.LegalDistrictJpa;
+import io.insight.real.apt.repository.jpa.entity.ProvinceJpa;
+import io.insight.real.apt.repository.jpa.entity.RegionJpa;
+import io.insight.real.apt.service.in.LegalDistrictService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,16 +24,18 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class LegalDistrictService {
+public class LegalDistrictServiceImpl implements LegalDistrictService {
     private final DistrictRepository districtRepository;
     private final RegionRepository regionRepository;
     private final ProvinceRepository provinceRepository;
 
+    @Override
     public List<RegionJpa> getRegions() {
         return regionRepository.findAllByStatus("존재");
     }
 
     @Transactional
+    @Override
     public void readLegalDistricts(MultipartFile file) {
         List<LegalDistrictJpa> districtList = new ArrayList<>();
         Map<String, Long> idMap = new HashMap<>();
@@ -76,6 +79,7 @@ public class LegalDistrictService {
 
     }
 
+    @Override
     public long getDistrictsCount() {
         return districtRepository.count();
     }

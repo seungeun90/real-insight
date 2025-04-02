@@ -1,12 +1,15 @@
 package io.insight.real.apt.service;
 
 import io.insight.real.apt.config.ApiProperties;
+import io.insight.real.apt.dto.BatchJobRequest;
+import io.insight.real.apt.dto.JobName;
 import io.insight.real.apt.dto.JobStatus;
-import io.insight.real.apt.dto.response.AptIdInfo;
-import io.insight.real.apt.dto.response.AptResponse;
+import io.insight.real.apt.dto.in.AptIdInfo;
+import io.insight.real.apt.dto.in.AptResponse;
 import io.insight.real.apt.repository.mapper.AptInfoMapper;
 import io.insight.real.apt.repository.r2dbc.AptInfoCustomRepository;
 import io.insight.real.apt.repository.r2dbc.entity.AptInfo;
+import io.insight.real.apt.service.in.JobStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,15 +26,21 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AptInfoJobService {
+public class AptInfoJobServiceImpl implements JobStrategy {
     private final CommonWebClientService webClientService;
     private final ApiProperties apiProperties;
     private final AptInfoCustomRepository aptInfoCustomRepository;
     private final BatchJobStatusService batchJobStatusService;
     private final AptInfoMapper aptInfoMapper;
 
-    public void triggerJob(String address, Long jobId){
-        runAptJob(address, jobId);
+    @Override
+    public void triggerJob(BatchJobRequest request){
+        runAptJob(request.getAdres(), request.getJobId());
+    }
+
+    @Override
+    public JobName getJobType() {
+        return JobName.APT_INFO_JOB;
     }
 
     private void runAptJob(String adres, Long jobId) {

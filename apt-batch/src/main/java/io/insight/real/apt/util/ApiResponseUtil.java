@@ -1,8 +1,8 @@
 package io.insight.real.apt.util;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import io.insight.real.apt.dto.response.XmlErrorResponse;
-import io.insight.real.apt.dto.response.XmlSuccessResponse;
+import io.insight.real.apt.dto.in.XmlErrorResponse;
+import io.insight.real.apt.dto.in.XmlSuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package io.insight.real.apt.controller;
 
 import io.insight.real.apt.repository.jpa.entity.RegionJpa;
-import io.insight.real.apt.service.LegalDistrictService;
+import io.insight.real.apt.service.in.LegalDistrictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

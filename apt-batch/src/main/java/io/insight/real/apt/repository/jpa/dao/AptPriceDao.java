@@ -1,4 +1,4 @@
-package io.insight.real.apt.repository.jpa.entity;
+package io.insight.real.apt.repository.jpa.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

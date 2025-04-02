@@ -1,6 +1,6 @@
 package io.insight.real.apt.repository.mapper;
 
-import io.insight.real.apt.dto.response.XmlApartmentItem;
+import io.insight.real.apt.dto.in.XmlApartmentItem;
 import io.insight.real.apt.repository.r2dbc.entity.AptTrade;
 import org.mapstruct.Mapper;
 

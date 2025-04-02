@@ -1,4 +1,4 @@
-package io.insight.real.apt.dto.response;
+package io.insight.real.apt.dto.in;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

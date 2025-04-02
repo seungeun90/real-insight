@@ -6,6 +6,7 @@ import io.insight.real.apt.dto.JobName;
 import io.insight.real.apt.dto.JobStatus;
 import io.insight.real.apt.repository.jpa.BatchJobRepository;
 import io.insight.real.apt.repository.jpa.entity.BatchJobQueueJpa;
+import io.insight.real.apt.service.in.BatchReserveService;
 import io.insight.real.apt.util.SlotDelayCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ import java.time.temporal.ChronoUnit;
 
 @RequiredArgsConstructor
 @Service
-public class BatchReserveService {
+public class BatchReserveServiceImpl implements BatchReserveService {
 
     private final BatchJobRepository batchJobRepository;
-    private final AptInfoJobService aptInfoService;
-    private final AptTradeJobService aptTradeJobService;
+    private final AptInfoJobServiceImpl aptInfoService;
+    private final AptTradeJobServiceImpl aptTradeJobService;
 
     @Transactional
     public void enqueueAptTradeJob(BatchJobRequest request) {
@@ -69,7 +70,7 @@ public class BatchReserveService {
         request.setJobName(JobName.APT_INFO_JOB.name());
 
         if (activeJobCount < 5 && scheduledTime.isBefore(LocalDateTime.now().plusSeconds(10))) {
-            aptInfoService.triggerJob(request.getAdres(), saved.getId());
+            aptInfoService.triggerJob(request);
         }
     }
 }

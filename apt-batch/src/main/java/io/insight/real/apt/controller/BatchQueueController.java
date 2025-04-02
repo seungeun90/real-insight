@@ -1,7 +1,7 @@
 package io.insight.real.apt.controller;
 
 import io.insight.real.apt.dto.BatchJobRequest;
-import io.insight.real.apt.service.BatchReserveService;
+import io.insight.real.apt.service.in.BatchReserveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
