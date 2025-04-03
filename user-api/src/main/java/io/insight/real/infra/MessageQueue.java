@@ -16,7 +16,7 @@ public class MessageQueue<T> {
 
     public List<T> getBatch() {
         List<T> batch = List.copyOf(queue);
-        queue.clear();
+        queue.removeAll(batch);
         return batch;
     }
 
