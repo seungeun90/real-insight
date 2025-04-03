@@ -113,3 +113,10 @@ management:
         enabled: true
 logging:
   config: classpath:logback/logback-spring.xml #BOOT-INF/classes/logback/logback-spring.xml
+
+springdoc:
+  api-docs:
+    path: /city-api
+  swagger-ui:
+    path: /city-api.html  #http://[domain]/city-api.html
+    operationsSorter: method

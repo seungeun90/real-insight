@@ -31,4 +31,9 @@ management:
     export:
       prometheus:
         enabled: true
-
+springdoc:
+  api-docs:
+    path: /user-api
+  swagger-ui:
+    path: /user-api.html  #http://[domain]/user-api.html
+    operationsSorter: method

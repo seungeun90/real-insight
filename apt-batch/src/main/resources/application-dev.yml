@@ -81,3 +81,10 @@ management:
         enabled: true
 logging:
   config: classpath:logback/logback-spring.xml #BOOT-INF/classes/logback/logback-spring.xml
+
+springdoc:
+  api-docs:
+    path: /apt-api
+  swagger-ui:
+    path: /apt-api.html  #http://[domain]/apt-api.html
+    operationsSorter: method
