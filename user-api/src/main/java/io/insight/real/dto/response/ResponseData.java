@@ -1,5 +1,6 @@
 package io.insight.real.dto.response;
 
+import io.insight.real.exception.ErrorResponse;
 import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -7,9 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-/**
- * Description : API 응답 표준화
- */
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")

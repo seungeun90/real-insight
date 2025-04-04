@@ -1,8 +1,8 @@
-package io.insight.real.infra;
+package io.insight.real.infra.mq;
 
 import com.rabbitmq.client.Channel;
 import io.insight.real.controller.BatchInsertScheduler;
-import io.insight.real.dto.CityRankingData;
+import io.insight.real.infra.repository.entity.CityRanking;
 import io.insight.real.dto.PopRankingData;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.CityPopulation;
@@ -79,7 +79,7 @@ public class RabbitMQConsumer {
         }
     }
     @RabbitListener(queues = "city-rank-queue", ackMode = "MANUAL")
-    public void receiveRankMessage(CityRankingData message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+    public void receiveRankMessage(CityRanking message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
         log.info("Received city Ranking Messages.. ");
 
         try {

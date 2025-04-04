@@ -1,8 +1,8 @@
 package io.insight.real.controller;
 
+import io.insight.real.dto.CityBasicInfoData;
 import io.insight.real.dto.CityPopulationData;
 import io.insight.real.dto.response.ResponseData;
-import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.service.in.PopulationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +26,11 @@ public class PopulationController {
 
     @Operation(summary = "선택 도시 내 모든 군/구의 인구 수 조회", description = "선택 도시 내 모든 군/구의 인구 수를 반환한다.")
     @ApiResponse(responseCode = "200", description = "성공",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = CityBasicInfo.class))))
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = CityBasicInfoData.class))))
     @GetMapping("/province/{province}/population")
     public ResponseEntity<?> getCityBasicInfo(@RequestParam("provinceCode") String provinceCode,
                                               @RequestParam("year") String year) {
-        List<CityBasicInfo> popDataInPvc = populationService.getPopDataInPvc(provinceCode, year);
+        List<CityBasicInfoData> popDataInPvc = populationService.getPopDataInPvc(provinceCode, year);
         return ResponseData.success(popDataInPvc);
     }
 

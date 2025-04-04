@@ -1,9 +1,9 @@
 package io.insight.real.controller;
 
 
-import io.insight.real.dto.CityRankingData;
+import io.insight.real.infra.repository.entity.CityRanking;
 import io.insight.real.dto.PopRankingData;
-import io.insight.real.infra.MessageQueue;
+import io.insight.real.infra.mq.MessageQueue;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.infra.repository.entity.Employment;
@@ -61,8 +61,8 @@ public class BatchInsertScheduler {
     public void savePopRankingData(PopRankingData popRankingData) {
         mongoTemplate.insert(popRankingData, PopRankingData.getCollectionName());
     }
-    public void saveCityRankingData(CityRankingData cityRankingData) {
-        mongoTemplate.insert(cityRankingData, CityRankingData.getCollectionName());
+    public void saveCityRankingData(CityRanking cityRanking) {
+        mongoTemplate.insert(cityRanking, CityRanking.getCollectionName());
     }
 
     public void saveDistrictData(Map<String, Object> message) {

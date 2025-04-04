@@ -1,10 +1,10 @@
 package io.insight.real.infra.repository.jpa;
 
-import io.insight.real.dto.CityRankingData;
+import io.insight.real.infra.repository.entity.CityRanking;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface CityRankingRepository extends MongoRepository<CityRankingData, Long> {
+public interface CityRankingRepository extends MongoRepository<CityRanking, Long> {
 
-    CityRankingData findByProvinceCodeAndCityCodeAndYear(String provinceCode,String cityCode,String year);
+    CityRanking findByProvinceCodeAndCityCodeAndYear(String provinceCode, String cityCode, String year);
 
 }

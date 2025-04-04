@@ -1,8 +1,8 @@
 package io.insight.real.config;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.CityPopulation;
-import io.insight.real.dto.CityRankingData;
-import io.insight.real.infra.MessageQueue;
+import io.insight.real.infra.repository.entity.CityRanking;
+import io.insight.real.infra.mq.MessageQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,7 +19,7 @@ public class QueueConfig {
         return new MessageQueue<>();
     }
     @Bean(name="rankingDataQueue")
-    public MessageQueue<CityRankingData> rankingDataQueue() {
+    public MessageQueue<CityRanking> rankingDataQueue() {
         return new MessageQueue<>();
     }
 

@@ -1,4 +1,4 @@
-package io.insight.real.infra;
+package io.insight.real.infra.mq;
 
 import org.springframework.stereotype.Component;
 

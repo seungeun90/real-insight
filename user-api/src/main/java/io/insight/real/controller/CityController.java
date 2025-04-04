@@ -1,9 +1,9 @@
 package io.insight.real.controller;
 
-import io.insight.real.dto.CityBasicData;
+import io.insight.real.dto.CityEmploymentData;
+import io.insight.real.dto.CityInfoData;
 import io.insight.real.dto.CityRankingData;
 import io.insight.real.dto.response.ResponseData;
-import io.insight.real.infra.repository.entity.Employment;
 import io.insight.real.service.in.CityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,35 +27,35 @@ public class CityController {
 
     @Operation(summary = "지역 기초 정보 조회", description = "지역 기초 정보를 반환한다.")
     @ApiResponse(responseCode = "200", description = "성공",
-            content = @Content(        schema = @Schema(implementation = CityBasicData.class)))
+            content = @Content(        schema = @Schema(implementation = CityInfoData.class)))
     @GetMapping("/province/{province}/city/{city}")
 
     public ResponseEntity<?> getCityRankInfo(@RequestParam("province") String provinceCode,
                                                            @RequestParam("city") String cityCode,
                                                            @RequestParam("year") String year) {
-        CityBasicData cityBasicData = cityService.getCityData(provinceCode, cityCode, year);
-        return ResponseData.success(cityBasicData);
+        CityInfoData cityInfoData = cityService.getCityData(provinceCode, cityCode, year);
+        return ResponseData.success(cityInfoData);
     }
 
 
     @Operation(summary = "지역 직장/종사자 정보 조회", description = "지역 직장/종사자 정보를 반환한다.")
     @ApiResponse(responseCode = "200", description = "성공",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Employment.class))))
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = CityEmploymentData.class))))
     @GetMapping("/province/{province}/city/{city}/work")
     public ResponseEntity<?> getCityWorkInfo(@PathVariable("province") String provinceCode,
                                              @PathVariable("city") String cityCode
                                              ) {
-        List<Employment> workData = cityService.getCityWorkData(provinceCode, cityCode);
+        List<CityEmploymentData> workData = cityService.getCityWorkData(provinceCode, cityCode);
         return ResponseData.success(workData);
     }
 
     @Operation(summary = "선택 도시 내 모든 군/구의 직장/종사자 수 조회", description = "지역 직장/종사자 정보를 반환한다.")
     @ApiResponse(responseCode = "200", description = "성공",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Employment.class))))
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = CityEmploymentData.class))))
     @GetMapping("/province/{province}/work")
     public ResponseEntity<?> getCityWorkInfo(@PathVariable("province") String provinceCode
     ) {
-        List<Employment> workData = cityService.getWorkDataInPvc(provinceCode);
+        List<CityEmploymentData> workData = cityService.getWorkDataInPvc(provinceCode);
         return ResponseData.success(workData);
     }
 

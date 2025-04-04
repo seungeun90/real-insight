@@ -1,7 +1,7 @@
 package io.insight.real.controller;
 
+import io.insight.real.dto.DistrictData;
 import io.insight.real.dto.response.ResponseData;
-import io.insight.real.infra.repository.entity.District;
 import io.insight.real.service.in.DistrictService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,7 +20,7 @@ public class DistrictController {
 
     @Operation(summary = "도시 지역 리스트 조회", description = "전국 도시 코드를 반환한다.")
     @ApiResponse(responseCode = "200", description = "성공",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = District.class))))
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = DistrictData.class))))
     @GetMapping("/districts")
     public ResponseEntity<?> getDistrictInfo() {
         return ResponseData.success(districtService.getDistricts());

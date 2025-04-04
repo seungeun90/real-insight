@@ -1,9 +1,9 @@
 package io.insight.real.service;
 
-import io.insight.real.dto.CityBasicData;
+import io.insight.real.dto.CityBasicInfoData;
+import io.insight.real.dto.CityInfoData;
+import io.insight.real.dto.CityEmploymentData;
 import io.insight.real.dto.CityRankingData;
-import io.insight.real.infra.repository.entity.CityBasicInfo;
-import io.insight.real.infra.repository.entity.Employment;
 import io.insight.real.service.in.CityService;
 import io.insight.real.service.out.CityRankingSearchRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +16,18 @@ import java.util.List;
 public class CityServiceImpl implements CityService {
     private final CityRankingSearchRepository cityRankingRepository;
 
-    public CityBasicInfo getCityData(String admCd, String year) {
+    public CityBasicInfoData getCityData(String admCd, String year) {
         return cityRankingRepository.getCityData(admCd, year);
     }
 
-    public CityBasicData getCityData(String provinceCode, String cityCode, String year) {
+    public CityInfoData getCityData(String provinceCode, String cityCode, String year) {
         return cityRankingRepository.findCityData(provinceCode,cityCode,year);
     }
 
-    public List<CityBasicInfo> getPopDataInPvc(String provinceCode, String year) {
+    public List<CityBasicInfoData> getPopDataInPvc(String provinceCode, String year) {
         return cityRankingRepository.getCityPopInPvc(provinceCode,year);
     }
-    public List<Employment> getCityWorkData(String provinceCode, String cityCode) {
+    public List<CityEmploymentData> getCityWorkData(String provinceCode, String cityCode) {
         return cityRankingRepository.getWorkData(provinceCode,cityCode);
     }
 
@@ -35,7 +35,7 @@ public class CityServiceImpl implements CityService {
         return cityRankingRepository.getWorkRankingData(provinceCode,cityCode);
     }
 
-    public List<Employment> getWorkDataInPvc(String provinceCode){
+    public List<CityEmploymentData> getWorkDataInPvc(String provinceCode){
         return cityRankingRepository.getWorkDataInPvc(provinceCode);
     }
 

@@ -1,11 +1,15 @@
 package io.insight.real.infra.repository;
 
-import io.insight.real.dto.CityBasicData;
+import io.insight.real.dto.CityBasicInfoData;
+import io.insight.real.dto.CityInfoData;
+import io.insight.real.dto.CityEmploymentData;
 import io.insight.real.dto.CityRankingData;
+import io.insight.real.infra.repository.entity.CityRanking;
 import io.insight.real.infra.repository.entity.CityBasicInfo;
 import io.insight.real.infra.repository.entity.District;
 import io.insight.real.infra.repository.entity.Employment;
 import io.insight.real.infra.repository.jpa.CityRankingRepository;
+import io.insight.real.infra.repository.mapper.CityInfoMapper;
 import io.insight.real.service.out.CityRankingSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,40 +28,45 @@ import java.util.stream.Collectors;
 public class CustomCityRankingRepository implements CityRankingSearchRepository {
     private final MongoTemplate mongoTemplate;
     private final CityRankingRepository cityRankingRepository;
+    private final CityInfoMapper cityInfoMapper;
     /**
      * 지역 기초 정보 조회
      * */
     @Override
-    public CityBasicData findCityData(String provinceCode, String cityCode, String year) {
+    public CityInfoData findCityData(String provinceCode, String cityCode, String year) {
 
-        CityBasicInfo cityData = getCityData(provinceCode+cityCode,year);
-        CityRankingData cityRankingData = getCityRankingData(provinceCode, cityCode, year);
+        CityBasicInfoData cityData = getCityData(provinceCode+cityCode,year);
+        CityRankingData cityRanking = getCityRankingData(provinceCode, cityCode, year);
 
-        CityRankingData workRank = cityRankingRepository.findByProvinceCodeAndCityCodeAndYear(provinceCode, cityCode, "2022");
+        CityRanking workRank = cityRankingRepository.findByProvinceCodeAndCityCodeAndYear(provinceCode, cityCode, "2022");
         if(workRank != null) {
-            cityRankingData.setEmployCntRank(workRank.getEmployCntRank());
-            cityRankingData.setCorpCntRank(workRank.getCorpCntRank());
+            cityRanking.setEmployCntRank(workRank.getEmployCntRank());
+            cityRanking.setCorpCntRank(workRank.getCorpCntRank());
         }
-        return CityBasicData.builder()
+
+        return CityInfoData.builder()
                 .cityBasicInfo(cityData)
-                .cityRankingData(cityRankingData)
+                .cityRanking(cityRanking)
                 .build();
     }
 
     public CityRankingData getWorkRankingData(String provinceCode, String cityCode) {
-        return cityRankingRepository.findByProvinceCodeAndCityCodeAndYear(provinceCode, cityCode, "2022");
+        CityRanking cityRanking = cityRankingRepository.findByProvinceCodeAndCityCodeAndYear(provinceCode, cityCode, "2022");
+        return cityInfoMapper.toRankingDto(cityRanking);
+
 
     }
     /**
      * 지역 기초 정보
      * 인구 수, 가구 수, 인구 밀도, 노령화지수, 평균 연령 정보
      * */
-    public CityBasicInfo getCityData(String admCd, String year) {
+    public CityBasicInfoData getCityData(String admCd, String year) {
         Query query = new Query();
         query.addCriteria(Criteria.where("admCd").is(admCd));
         query.addCriteria(Criteria.where("year").is(year));
         query.fields().exclude("employCnt").exclude("corpCnt");
-        return mongoTemplate.findOne(query, CityBasicInfo.class, "city_basic");
+        CityBasicInfo cityBasic = mongoTemplate.findOne(query, CityBasicInfo.class, "city_basic");
+        return cityInfoMapper.toCityDto(cityBasic);
     }
 
     /**
@@ -75,13 +84,14 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
             query.addCriteria(Criteria.where("year").is(year));
         }
 
-        return mongoTemplate.findOne(query, CityRankingData.class, "city_ranking");
+        CityRanking cityRanking = mongoTemplate.findOne(query, CityRanking.class, "city_ranking");
+        return cityInfoMapper.toRankingDto(cityRanking);
     }
 
     /**
      * 지역 직장/종사자 수 조회
      * */
-    public List<Employment> getWorkData(String provinceCode, String cityCode) {
+    public List<CityEmploymentData> getWorkData(String provinceCode, String cityCode) {
         Query query = new Query();
         if (provinceCode != null) {
             query.addCriteria(Criteria.where("provinceCode").is(provinceCode));
@@ -91,14 +101,15 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
         }
 
         query.addCriteria(Criteria.where("year").is("2022"));
-        return mongoTemplate.find(query, Employment.class, "employment");
+        List<Employment> employment = mongoTemplate.find(query, Employment.class, "employment");
+        return cityInfoMapper.toEmpDtoList(employment);
     }
 
 
     /**
      * 시/도 내 모든 군/구 인구 수 조회
      * */
-    public List<CityBasicInfo> getCityPopInPvc(String provinceCode, String year) {
+    public List<CityBasicInfoData> getCityPopInPvc(String provinceCode, String year) {
         Query query = new Query();
         Map<String, String> cityCodes = getCityCodes(provinceCode);
 
@@ -119,13 +130,13 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
             info.setCityName(cityName);
         });
 
-        return cityBasic;
+        return cityInfoMapper.toCityDtoList(cityBasic);
     }
 
     /**
      * 동일 시/도 내 모든 군/구 직장/종사자 수 조회
      * */
-    public List<Employment> getWorkDataInPvc(String provinceCode) {
+    public List<CityEmploymentData> getWorkDataInPvc(String provinceCode) {
         Query query = new Query();
         query.addCriteria(Criteria.where("provinceCode").is(provinceCode));
         query.addCriteria(
@@ -135,10 +146,11 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
                 )
         );
         query.addCriteria(Criteria.where("year").is("2022"));
-        return mongoTemplate.find(query, Employment.class, "employment");
+        List<Employment> employment = mongoTemplate.find(query, Employment.class, "employment");
+        return cityInfoMapper.toEmpDtoList(employment);
     }
 
-    public List<CityBasicInfo> getTownInfoInCity(String provinceCode, String cityCode) {
+    public List<CityBasicInfoData> getTownInfoInCity(String provinceCode, String cityCode) {
         Query query = new Query();
         //Map<String, String> cityCodes = getCityCodes(provinceCode);
         //List<String> admCdList = new ArrayList<>(cityCodes.keySet());
@@ -157,7 +169,7 @@ public class CustomCityRankingRepository implements CityRankingSearchRepository 
         query.addCriteria(Criteria.where("year").is("2023"));
         List<CityBasicInfo> cityBasic = mongoTemplate.find(query, CityBasicInfo.class, "city_basic");
 
-        return cityBasic;
+        return cityInfoMapper.toCityDtoList(cityBasic);
     }
 
     /**

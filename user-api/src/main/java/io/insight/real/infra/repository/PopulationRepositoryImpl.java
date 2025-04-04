@@ -1,8 +1,10 @@
 package io.insight.real.infra.repository;
 
 import io.insight.real.dto.PopRankingData;
+import io.insight.real.dto.PopulationData;
 import io.insight.real.infra.repository.entity.CityPopulation;
 import io.insight.real.infra.repository.entity.District;
+import io.insight.real.infra.repository.mapper.PopulationMapper;
 import io.insight.real.service.out.PopulationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -19,8 +21,9 @@ import java.util.stream.Collectors;
 @Repository
 public class PopulationRepositoryImpl implements PopulationRepository {
     private final MongoTemplate mongoTemplate;
+    private final PopulationMapper populationMapper;
 
-    public List<CityPopulation> getPopulation(String provinceCode, String cityCode) {
+    public List<PopulationData> getPopulation(String provinceCode, String cityCode) {
         Query query = new Query();
 
         if (provinceCode != null) {
@@ -37,7 +40,8 @@ public class PopulationRepositoryImpl implements PopulationRepository {
                 )
         );
 
-        return mongoTemplate.find(query, CityPopulation.class, "population");
+        List<CityPopulation> population = mongoTemplate.find(query, CityPopulation.class, "population");
+        return populationMapper.toDtoList(population);
     }
     /**
      *
