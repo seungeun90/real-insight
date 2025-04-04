@@ -2,11 +2,11 @@ package io.insight.real.infra.mq;
 
 import com.rabbitmq.client.Channel;
 import io.insight.real.controller.BatchInsertScheduler;
-import io.insight.real.infra.repository.entity.CityRanking;
+import io.insight.real.infra.persistence.entity.CityRanking;
 import io.insight.real.dto.PopRankingData;
-import io.insight.real.infra.repository.entity.CityBasicInfo;
-import io.insight.real.infra.repository.entity.CityPopulation;
-import io.insight.real.infra.repository.entity.Employment;
+import io.insight.real.infra.persistence.entity.CityBasicInfo;
+import io.insight.real.infra.persistence.entity.CityPopulation;
+import io.insight.real.infra.persistence.entity.Employment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

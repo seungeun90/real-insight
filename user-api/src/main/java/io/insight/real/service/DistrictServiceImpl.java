@@ -1,8 +1,8 @@
 package io.insight.real.service;
 
 import io.insight.real.dto.DistrictData;
-import io.insight.real.infra.repository.jpa.DistrictRepository;
-import io.insight.real.infra.repository.mapper.DistrictMapper;
+import io.insight.real.infra.persistence.jpa.DistrictRepository;
+import io.insight.real.infra.persistence.mapper.DistrictMapper;
 import io.insight.real.service.in.DistrictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

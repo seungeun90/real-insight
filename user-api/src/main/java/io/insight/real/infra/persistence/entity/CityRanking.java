@@ -1,4 +1,4 @@
-package io.insight.real.infra.repository.entity;
+package io.insight.real.infra.persistence.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

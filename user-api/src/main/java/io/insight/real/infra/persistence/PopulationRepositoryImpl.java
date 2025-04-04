@@ -1,10 +1,10 @@
-package io.insight.real.infra.repository;
+package io.insight.real.infra.persistence;
 
 import io.insight.real.dto.PopRankingData;
 import io.insight.real.dto.PopulationData;
-import io.insight.real.infra.repository.entity.CityPopulation;
-import io.insight.real.infra.repository.entity.District;
-import io.insight.real.infra.repository.mapper.PopulationMapper;
+import io.insight.real.infra.persistence.entity.CityPopulation;
+import io.insight.real.infra.persistence.entity.District;
+import io.insight.real.infra.persistence.mapper.PopulationMapper;
 import io.insight.real.service.out.PopulationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;

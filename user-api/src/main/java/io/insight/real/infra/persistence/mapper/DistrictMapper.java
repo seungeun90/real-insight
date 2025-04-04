@@ -1,7 +1,7 @@
-package io.insight.real.infra.repository.mapper;
+package io.insight.real.infra.persistence.mapper;
 
 import io.insight.real.dto.DistrictData;
-import io.insight.real.infra.repository.entity.District;
+import io.insight.real.infra.persistence.entity.District;
 import org.mapstruct.Mapper;
 
 import java.util.List;

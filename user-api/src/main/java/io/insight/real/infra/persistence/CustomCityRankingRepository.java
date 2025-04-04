@@ -1,15 +1,15 @@
-package io.insight.real.infra.repository;
+package io.insight.real.infra.persistence;
 
 import io.insight.real.dto.CityBasicInfoData;
 import io.insight.real.dto.CityInfoData;
 import io.insight.real.dto.CityEmploymentData;
 import io.insight.real.dto.CityRankingData;
-import io.insight.real.infra.repository.entity.CityRanking;
-import io.insight.real.infra.repository.entity.CityBasicInfo;
-import io.insight.real.infra.repository.entity.District;
-import io.insight.real.infra.repository.entity.Employment;
-import io.insight.real.infra.repository.jpa.CityRankingRepository;
-import io.insight.real.infra.repository.mapper.CityInfoMapper;
+import io.insight.real.infra.persistence.entity.CityRanking;
+import io.insight.real.infra.persistence.entity.CityBasicInfo;
+import io.insight.real.infra.persistence.entity.District;
+import io.insight.real.infra.persistence.entity.Employment;
+import io.insight.real.infra.persistence.jpa.CityRankingRepository;
+import io.insight.real.infra.persistence.mapper.CityInfoMapper;
 import io.insight.real.service.out.CityRankingSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;

@@ -1,4 +1,4 @@
-package io.insight.real.infra.repository.entity;
+package io.insight.real.infra.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
