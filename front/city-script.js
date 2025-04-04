@@ -157,7 +157,7 @@ function loadData() {
 
 
 function fetchCityPopulation(provinceCode,cityCode){
-    let url =  userAddr + `/city/pop/province/${provinceCode}/city/${cityCode}`;
+    let url =  userAddr + `/province/${provinceCode}/city/${cityCode}/population`;
     fetchData(url,data => {
         popRankingData = data.popRankingData;
         cityPopulation = data.cityPopulation;
@@ -196,7 +196,7 @@ function renderWorkDataTable(data) {
 }
 
 function fetchCityData(provinceCode,cityCode,year){
-    let url =  userAddr + `/city?provinceCode=${provinceCode}&cityCode=${cityCode}&year=${year}`;
+    let url =  userAddr + `/province/${provinceCode}/city/${cityCode}?year=${year}`;
     fetchData(url,data =>{
         if(data.cityBasicInfo == null ) {
             console.log('지역정보 데이터가 존재하지 않습니다.');
@@ -232,19 +232,19 @@ function fetchCityData(provinceCode,cityCode,year){
 }
 
 function fetchWorkData(provinceCode,cityCode,year){
-    let cityUrl =  userAddr + `/work/province/${provinceCode}/city/${cityCode}`;
+    let cityUrl =  userAddr + `/province/${provinceCode}/city/${cityCode}/work`;
     fetchData(cityUrl, data => {
         renderWorkDataTable(data);
     });
 
-    let url = userAddr + `/work/province/${provinceCode}`;
+    let url = userAddr + `/province/${provinceCode}/work`;
     fetchData(url, data=>{
         createWorkChart(data);
     })
 }
 
 function fetchPopInProvince(provinceCode,year){
-    let url = userAddr + `/cities/pop?provinceCode=${provinceCode}&year=${year}`;
+    let url = userAddr + `/province/${provinceCode}/population?year=${year}`;
     fetchData(url, data =>{
         createPopChart(data);
     });

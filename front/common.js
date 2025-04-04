@@ -20,8 +20,8 @@ function updateNumberDisplay(elementId,value) {
 function fetchData(url, callback) {
     fetch(url)
         .then(response => response.json())
-        .then(data => {
-            if (callback) callback(data); // 콜백 함수 실행
+        .then(response => {
+            if (callback) callback(response.data);// 콜백 함수 실행
         })
         .catch(error => console.error(`데이터 요청 중 오류 발생 (${url}):`, error));
 }
