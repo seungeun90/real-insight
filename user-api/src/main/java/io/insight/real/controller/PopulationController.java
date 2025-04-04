@@ -28,7 +28,7 @@ public class PopulationController {
     @ApiResponse(responseCode = "200", description = "성공",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = CityBasicInfoData.class))))
     @GetMapping("/province/{province}/population")
-    public ResponseEntity<?> getCityBasicInfo(@RequestParam("provinceCode") String provinceCode,
+    public ResponseEntity<?> getCityBasicInfo(@PathVariable("province") String provinceCode,
                                               @RequestParam("year") String year) {
         List<CityBasicInfoData> popDataInPvc = populationService.getPopDataInPvc(provinceCode, year);
         return ResponseData.success(popDataInPvc);

@@ -27,12 +27,12 @@ public class CityController {
 
     @Operation(summary = "지역 기초 정보 조회", description = "지역 기초 정보를 반환한다.")
     @ApiResponse(responseCode = "200", description = "성공",
-            content = @Content(        schema = @Schema(implementation = CityInfoData.class)))
+            content = @Content(schema = @Schema(implementation = CityInfoData.class)))
     @GetMapping("/province/{province}/city/{city}")
 
-    public ResponseEntity<?> getCityRankInfo(@RequestParam("province") String provinceCode,
-                                                           @RequestParam("city") String cityCode,
-                                                           @RequestParam("year") String year) {
+    public ResponseEntity<?> getCityRankInfo(@PathVariable("province") String provinceCode,
+                                           @PathVariable("city") String cityCode,
+                                           @RequestParam("year") String year) {
         CityInfoData cityInfoData = cityService.getCityData(provinceCode, cityCode, year);
         return ResponseData.success(cityInfoData);
     }
@@ -61,7 +61,7 @@ public class CityController {
 
     @Operation(summary = "도시 직장/종사자 수 순위 정보 조회", description = "지역 직장/종사자 순위 정보를 반환한다.")
     @ApiResponse(responseCode = "200", description = "성공",
-            content = @Content(        schema = @Schema(implementation = CityRankingData.class)))
+            content = @Content(schema = @Schema(implementation = CityRankingData.class)))
     @GetMapping("/province/{province}/city/{city}/ranking/work")
     public ResponseEntity<?> getWorkRankInfo(@PathVariable("province") String provinceCode,
                                              @PathVariable("city") String cityCode
