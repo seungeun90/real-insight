@@ -20,6 +20,11 @@ public class PopulationServiceImpl implements PopulationService {
 
     private final PopulationRepository populationRepository;
     private final CityService cityService;
+
+    public List<CityBasicInfo> getPopDataInPvc(String provinceCode, String year) {
+        return cityService.getPopDataInPvc(provinceCode,year);
+    }
+
     @Override
     public CityPopulationData getPopulationDataInCity(String provinceCode, String cityCode) {
         List<CityPopulation> population = populationRepository.getPopulation(provinceCode, cityCode);
