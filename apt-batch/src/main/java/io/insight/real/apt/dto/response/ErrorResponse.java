@@ -1,4 +1,4 @@
-package io.insight.real.dto.response;
+package io.insight.real.apt.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;
