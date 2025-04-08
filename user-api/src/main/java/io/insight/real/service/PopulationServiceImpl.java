@@ -27,44 +27,17 @@ public class PopulationServiceImpl implements PopulationService {
     @Override
     public CityPopulationData getPopulationDataInCity(String provinceCode, String cityCode) {
         List<PopulationData> population = populationRepository.getPopulation(provinceCode, cityCode);
-        List<PopulationData> populationDataList = new ArrayList<>();
         population.forEach(data ->{
             CityBasicInfoData cityData = cityService.getCityData(data.getAdmCd(), "2023");
-    /*        PopulationData populationData = new PopulationData();
-            populationData.setAdmCd(data.getAdmCd());
-            populationData.setProvinceCode(data.getProvinceCode());
-            populationData.setCityCode(data.getCityCode());
-            populationData.setTownCode(data.getTownCode());
-            populationData.setTownName(data.getTownName());
-            populationData.setTeenageLessThanPer(data.getTeenageLessThanPer());
-            populationData.setTeenageLessThanCnt(data.getTeenageLessThanCnt());
-            populationData.setTeenagePer(data.getTeenagePer());
-            populationData.setTeenageCnt(data.getTeenageCnt());
-            populationData.setTwentyPer(data.getTwentyPer());
-            populationData.setTwentyCnt(data.getTwentyCnt());
-            populationData.setThirtyPer(data.getThirtyPer());
-            populationData.setThirtyCnt(data.getThirtyCnt());
-            populationData.setFortyPer(data.getFortyPer());
-            populationData.setFortyCnt(data.getFortyCnt());
-            populationData.setFiftyPer(data.getFiftyPer());
-            populationData.setFiftyCnt(data.getFiftyCnt());
-            populationData.setSixtyPer(data.getSixtyPer());
-            populationData.setSixtyCnt(data.getSixtyCnt());
-            populationData.setSeventyMoreThanPer(data.getSeventyMoreThanPer());
-            populationData.setSeventyMoreThanCnt(data.getSeventyMoreThanCnt());
-*/
             data.setTotalPopulation(cityData.getTotalPopulation());
             data.setHouseholdCount(cityData.getHouseholdCount());
             data.setAverageHouseholdSize(cityData.getAverageHouseholdSize());
-
-           // populationDataList.add(populationData);
         });
 
         List<PopRankingData> populationRank = populationRepository.getPopulationRank(provinceCode, cityCode);
 
-
         return CityPopulationData.builder()
-                .cityPopulation(populationDataList)
+                .cityPopulation(population)
                 .popRankingData(populationRank)
                 .build();
     }
