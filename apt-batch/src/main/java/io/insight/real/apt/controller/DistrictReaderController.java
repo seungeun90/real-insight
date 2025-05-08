@@ -27,7 +27,7 @@ public class DistrictReaderController {
     @PostMapping("/district")
     public ResponseEntity<?> uploadDistrictData(@RequestParam("file") MultipartFile file){
         legalDistrictService.readLegalDistricts(file);
-        return ResponseData.success(null);
+        return ResponseData.success();
     }
 
     @GetMapping("/districts/count")

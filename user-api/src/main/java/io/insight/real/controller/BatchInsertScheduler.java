@@ -1,11 +1,11 @@
 package io.insight.real.controller;
 
 
-import io.insight.real.infra.persistence.entity.CityRanking;
 import io.insight.real.dto.PopRankingData;
 import io.insight.real.infra.mq.MessageQueue;
 import io.insight.real.infra.persistence.entity.CityBasicInfo;
 import io.insight.real.infra.persistence.entity.CityPopulation;
+import io.insight.real.infra.persistence.entity.CityRanking;
 import io.insight.real.infra.persistence.entity.Employment;
 import io.insight.real.infra.persistence.jpa.CityDataRepository;
 import io.insight.real.infra.persistence.jpa.EmploymentRepository;
@@ -30,7 +30,6 @@ public class BatchInsertScheduler {
     private final CityDataRepository cityDataRepository;
     private final MongoTemplate mongoTemplate;
     private final EmploymentRepository employmentRepository;
-
 
     @Scheduled(fixedRate = 30000)
     public void insertPopBatchData() {

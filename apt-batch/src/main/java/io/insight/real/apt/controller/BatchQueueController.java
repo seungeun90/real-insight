@@ -19,13 +19,13 @@ public class BatchQueueController {
     @PostMapping("/schedules/apt-trade")
     public ResponseEntity<?> submitAptTradeJob(@RequestBody BatchJobRequest batchJobRequest) {
         batchReserveService.enqueueAptTradeJob(batchJobRequest);
-        return ResponseData.success(null);
+        return ResponseData.success();
     }
 
     @PostMapping("/schedules/apt")
     public ResponseEntity<?> submitAptInfoJob(@RequestBody BatchJobRequest batchJobRequest) {
         batchReserveService.enqueueAptInfoJob(batchJobRequest);
-        return ResponseData.success(null);
+        return ResponseData.success();
     }
 
 }

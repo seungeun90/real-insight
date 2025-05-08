@@ -43,6 +43,10 @@ public class ResponseData<T> {
         return ResponseEntity.noContent().build();
     }
 
+    public static <T> ResponseEntity<?> success() {
+        return success(null, HttpStatus.OK,true, null);
+    }
+
     public static <T> ResponseEntity<?> success(T data) {
         return success(data, HttpStatus.OK,true, null);
     }
